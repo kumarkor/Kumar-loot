@@ -188,7 +188,7 @@
             <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="G">
             Login with Google
         </button>
-        <p id="login-status" style="font-size: 12px; margin-top: 20px;"></p>
+        <p id="login-status" style="font-size: 12px; margin-top: 20px; font-weight: bold;"></p>
     </div>
 
     <!-- 📱 APP SCREEN -->
@@ -199,7 +199,7 @@
             <div class="menu-btn"><i class="fa-solid fa-bars"></i></div>
             <div class="header-text">
                 <h3>Kumar Loot</h3>
-                <p id="user-greeting">Good evening, User!</p>
+                <p id="user-greeting">Loading...</p>
             </div>
             <div class="profile-btn" id="user-initial">K</div>
         </div>
@@ -207,11 +207,11 @@
         <!-- Balance Card -->
         <div class="balance-card">
             <div class="balance-title">Available Balance</div>
-            <div class="balance-amount"><i class="fa-solid fa-coins"></i> ₹<span id="user-balance">0.00</span></div>
+            <div class="balance-amount"><i class="fa-solid fa-coins"></i> ₹<span id="user-balance">0.10</span></div>
             <button class="wallet-btn" onclick="window.location.href='https://t.me/KumarWalletBot'"><i class="fa-solid fa-wallet"></i> Wallet</button>
             <div class="card-actions">
-                <div><i class="fa-solid fa-users"></i> Invite Friends</div>
-                <div><i class="fa-solid fa-headset"></i> Get Help</div>
+                <div onclick="alert('Invite System Coming Soon!')"><i class="fa-solid fa-users"></i> Invite Friends</div>
+                <div onclick="window.location.href='https://t.me/KumarWalletBot'"><i class="fa-solid fa-headset"></i> Get Help</div>
             </div>
         </div>
 
@@ -248,20 +248,20 @@
             <div class="nav-item"><i class="fa-solid fa-tags"></i>Offers</div>
             <div class="nav-item"><i class="fa-solid fa-face-smile"></i>Rewards</div>
             <div class="nav-item active"><div class="nav-icon"><i class="fa-solid fa-house"></i></div>Home</div>
-            <div class="nav-item"><i class="fa-solid fa-wallet"></i>Wallet</div>
+            <div class="nav-item" onclick="window.location.href='https://t.me/KumarWalletBot'"><i class="fa-solid fa-wallet"></i>Wallet</div>
             <div class="nav-item"><i class="fa-solid fa-user-plus"></i>Refer</div>
         </div>
 
     </div>
 
-    <!-- 🛠️ FIREBASE & LOGIC (MODULE SCRIPT) -->
+    <!-- 🛠️ FIREBASE LOGIC -->
     <script type="module">
-        // Firebase Modular SDK Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        // 🚨 इथे Popup च्या ऐवजी Redirect वापरलं आहे (मोबाईलमध्ये कधीच फेल होणार नाही)
+        import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getDatabase, ref, get, set, child } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // 1️⃣ तुझी Firebase Config (तू दिलेली)
+        // तुझी Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyCewAWzj09CsJWJRqZ16TmWN6Z-d0ATyaM",
             authDomain: "kumar-loot.firebaseapp.com",
@@ -274,65 +274,62 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getDatabase(app);
-
-        // 2️⃣ Device Fingerprint Load करणे (Anti-Hack साठी)
         const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4').then(FingerprintJS => FingerprintJS.load());
 
-        // 3️⃣ Login Button Logic
-        document.getElementById('login-btn').addEventListener('click', () => {
-            const provider = new GoogleAuthProvider();
-            document.getElementById('login-status').innerText = "Opening Google Login...";
-            signInWithPopup(auth, provider).catch(err => {
-                document.getElementById('login-status').innerText = "Login failed: " + err.message;
-            });
+        // Redirect Result Check (लॉगिन झाल्यावर परत आल्यावर)
+        getRedirectResult(auth).catch((error) => {
+            document.getElementById('login-status').innerText = "Login Failed: " + error.message;
         });
 
-        // 4️⃣ Auth State Change (लॉगिन झाल्यावर काय करायचं)
+        // 1️⃣ लॉगिन बटण क्लिक केल्यावर थेट गुगलच्या पेजवर पाठवणे
+        document.getElementById('login-btn').addEventListener('click', () => {
+            document.getElementById('login-status').innerText = "Redirecting to Google...";
+            const provider = new GoogleAuthProvider();
+            signInWithRedirect(auth, provider); // डायरेक्ट गुगल पेज उघडेल
+        });
+
+        // 2️⃣ युझर तपासणे (1 Device = 1 User)
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 document.getElementById('login-status').innerText = "Verifying Device Security...";
-                
-                // Device ID काढणे
-                const fp = await fpPromise;
-                const result = await fp.get();
-                const deviceId = result.visitorId;
+                try {
+                    const fp = await fpPromise;
+                    const result = await fp.get();
+                    const deviceId = result.visitorId;
 
-                // डेटाबेसमध्ये चेक करणे
-                const dbRef = ref(db);
-                const deviceSnapshot = await get(child(dbRef, `devices/${deviceId}`));
+                    const dbRef = ref(db);
+                    const deviceSnapshot = await get(child(dbRef, `devices/${deviceId}`));
 
-                if (deviceSnapshot.exists() && deviceSnapshot.val() !== user.uid) {
-                    // 🚨 हॅकर पकडला! एका फोनवर दुसरा Gmail टाकत आहे
-                    alert("⚠️ SECURITY ALERT: This device is already registered with another account. 1 Device = 1 Account allowed!");
-                    auth.signOut();
-                } else {
-                    // ✅ सेफ युझर! त्याला ॲपमध्ये पाठवा
-                    if (!deviceSnapshot.exists()) {
-                        // नवीन डिव्हाईस सेव्ह करा
-                        set(ref(db, `devices/${deviceId}`), user.uid);
+                    if (deviceSnapshot.exists() && deviceSnapshot.val() !== user.uid) {
+                        alert("⚠️ SECURITY ALERT: This device is already registered with another account. 1 Device = 1 Account allowed!");
+                        auth.signOut();
+                    } else {
+                        if (!deviceSnapshot.exists()) {
+                            set(ref(db, `devices/${deviceId}`), user.uid);
+                        }
+
+                        // लॉगिन यशस्वी झालं! UI बदला
+                        document.getElementById('login-screen').style.display = 'none';
+                        document.getElementById('app-screen').style.display = 'block';
+                        
+                        let firstName = user.displayName ? user.displayName.split(" ")[0] : "User";
+                        document.getElementById('user-greeting').innerText = "Good evening, " + firstName + "!";
+                        document.getElementById('user-initial').innerText = firstName.charAt(0).toUpperCase();
                     }
-
-                    // UI अपडेट करा
-                    document.getElementById('login-screen').style.display = 'none';
-                    document.getElementById('app-screen').style.display = 'block';
-                    
-                    let firstName = user.displayName ? user.displayName.split(" ")[0] : "User";
-                    document.getElementById('user-greeting').innerText = "Good evening, " + firstName + "!";
-                    document.getElementById('user-initial').innerText = firstName.charAt(0).toUpperCase();
+                } catch (err) {
+                    document.getElementById('login-status').innerText = "Error verifying device. Please reload.";
                 }
             } else {
-                // युझर लॉगिन नाहीये, Login पेज दाखवा
                 document.getElementById('login-screen').style.display = 'flex';
                 document.getElementById('app-screen').style.display = 'none';
             }
         });
 
-        // 5️⃣ 💸 WATCH & EARN BUTTON LOGIC (Global Function)
+        // 3️⃣ 💸 Watch & Earn Button Logic
         window.watchAdAndEarn = function() {
             // 🚨🚨 इथे तुझी Adsterra ची Direct Link टाक 🚨🚨
             const adsterraLink = "TUZHI_ADSTERRA_DIRECT_LINK_ITHE_TAK"; 
             
-            // Cooldown Logic (५ मिनिटे)
             const lastClick = localStorage.getItem("last_ad_click") || 0;
             const now = new Date().getTime();
             const cooldownTime = 5 * 60 * 1000; // 5 Mins
@@ -343,10 +340,8 @@
                 return;
             }
 
-            // Save click time and open ad
             localStorage.setItem("last_ad_click", now);
             window.open(adsterraLink, '_blank');
-            
             alert("🚀 Ad opened! Wait 15 seconds on the page to verify task. Balance will update shortly.");
         };
     </script>
