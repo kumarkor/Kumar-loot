@@ -2,266 +2,239 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kumar Loot - Earning App</title>
-    <!-- Google Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kumar Loot - Premium Earning App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f6fc;
-            margin: 0;
-            padding: 0;
-            user-select: none;
-        }
+        /* =========================================
+           🌟 GLOBAL STYLES & ANIMATIONS
+           ========================================= */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        body { background: #0f172a; color: #fff; overflow-x: hidden; user-select: none; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulseGlow { 0% { box-shadow: 0 0 10px #4f46e5; } 50% { box-shadow: 0 0 30px #4f46e5; } 100% { box-shadow: 0 0 10px #4f46e5; } }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
 
-        /* 🔐 Login Screen */
-        #login-screen {
-            display: flex;
-            height: 100vh;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #4b39ef, #3020b8);
-            color: white;
-            text-align: center;
+        /* =========================================
+           🚀 SPLASH SCREEN (LOADING)
+           ========================================= */
+        #splash-screen {
+            position: fixed; width: 100vw; height: 100vh; background: linear-gradient(135deg, #1e1b4b, #312e81);
+            display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999;
+            transition: opacity 0.5s ease;
         }
-        #login-screen h1 { font-size: 32px; margin-bottom: 10px; }
-        .google-btn {
-            background: white;
-            color: #333;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .google-btn img { width: 24px; }
+        .splash-logo { font-size: 50px; text-shadow: 0 0 20px #fbbf24; animation: float 3s infinite ease-in-out; }
+        .splash-text { font-size: 28px; font-weight: 800; margin-top: 15px; color: #fff; letter-spacing: 2px; }
+        .loader { width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.2); border-top-color: #fbbf24; border-radius: 50%; animation: spin 1s linear infinite; margin-top: 30px; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* 📱 Main App Screen (Hidden by default) */
+        /* =========================================
+           🔐 AUTHENTICATION SCREEN (LOGIN / REGISTER)
+           ========================================= */
+        #auth-screen { display: none; min-height: 100vh; background: #0f172a; padding: 20px; align-items: center; justify-content: center; flex-direction: column; }
+        .auth-box {
+            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 25px;
+            padding: 30px 20px; width: 100%; max-width: 400px; text-align: center;
+            animation: fadeIn 0.6s ease-out;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+        .auth-tabs { display: flex; justify-content: center; margin-bottom: 25px; background: rgba(0,0,0,0.3); border-radius: 30px; padding: 5px; }
+        .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; color: #888; font-weight: 600; border-radius: 25px; cursor: pointer; transition: 0.3s; }
+        .tab-btn.active { background: #4f46e5; color: #fff; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.4); }
+
+        .input-group { position: relative; margin-bottom: 20px; text-align: left; }
+        .input-group i { position: absolute; left: 15px; top: 14px; color: #888; font-size: 18px; }
+        .custom-input { width: 100%; padding: 12px 15px 12px 45px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 12px; font-size: 14px; outline: none; transition: 0.3s; }
+        .custom-input:focus { border-color: #4f46e5; background: rgba(0,0,0,0.4); }
+
+        .primary-btn { width: 100%; padding: 12px; background: linear-gradient(45deg, #4f46e5, #6366f1); border: none; border-radius: 12px; color: white; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        .primary-btn:hover { transform: scale(0.98); }
+
+        .divider { display: flex; align-items: center; margin: 25px 0; color: #888; font-size: 12px; }
+        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.1); margin: 0 10px; }
+
+        .google-btn { width: 100%; padding: 12px; background: white; border: none; border-radius: 12px; color: #333; font-weight: bold; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
+        .google-btn img { width: 20px; }
+        
+        #error-msg { color: #ff4d4d; font-size: 12px; margin-top: 15px; min-height: 15px; }
+
+        /* =========================================
+           📱 MAIN APP DASHBOARD
+           ========================================= */
         #app-screen { display: none; padding-bottom: 80px; }
+        
+        /* App Header */
+        .app-header { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .user-info h3 { margin: 0; font-size: 18px; color: #fff; }
+        .user-info p { margin: 0; font-size: 12px; color: #a1a1aa; }
+        .profile-pic { width: 45px; height: 45px; background: linear-gradient(45deg, #fbbf24, #f59e0b); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3); }
 
-        /* Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            background: white;
-        }
-        .header-text h3 { margin: 0; color: #fbc02d; font-size: 18px; text-transform: uppercase; }
-        .header-text p { margin: 0; color: #4b39ef; font-weight: 600; font-size: 14px; }
-        .menu-btn, .profile-btn {
-            background: #4b39ef;
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 18px;
-        }
-        .profile-btn { background: #81c784; border-radius: 50%; font-weight: bold; }
-
-        /* Balance Card */
+        /* Premium Balance Card */
         .balance-card {
-            background: #4b39ef;
-            margin: 0 20px;
-            border-radius: 20px;
-            padding: 20px;
-            color: white;
-            box-shadow: 0 5px 15px rgba(75, 57, 239, 0.4);
-            position: relative;
+            margin: 20px; padding: 25px; border-radius: 20px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            position: relative; overflow: hidden;
+            box-shadow: 0 15px 30px rgba(29, 78, 216, 0.4);
+            animation: fadeIn 0.8s ease-out;
         }
-        .balance-title { font-size: 12px; opacity: 0.9; }
-        .balance-amount { font-size: 32px; font-weight: bold; margin: 5px 0; display: flex; align-items: center; gap: 10px; }
-        .balance-amount i { color: #fbc02d; }
-        .wallet-btn {
-            position: absolute;
-            right: 20px;
-            top: 30px;
-            background: white;
-            color: #4b39ef;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 12px;
-            cursor: pointer;
-        }
-        .card-actions {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-            border-top: 1px solid rgba(255,255,255,0.2);
-            padding-top: 15px;
-        }
-        .card-actions div { font-size: 12px; font-weight: 600; cursor: pointer; }
+        .balance-card::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1) 10%, transparent 20%); background-size: 20px 20px; opacity: 0.3; transform: rotate(30deg); }
+        .balance-label { font-size: 14px; opacity: 0.9; }
+        .balance-amount { font-size: 40px; font-weight: 800; margin: 5px 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .withdraw-btn { position: absolute; right: 20px; top: 35px; background: rgba(255,255,255,0.2); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.5); padding: 8px 15px; border-radius: 20px; color: #fff; font-weight: bold; cursor: pointer; z-index: 2; transition: 0.3s; }
+        .withdraw-btn:hover { background: #fff; color: #1d4ed8; }
 
-        /* Grid Tasks */
-        .task-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            padding: 25px 20px;
-            text-align: center;
+        /* Task Grid */
+        .section-title { padding: 0 20px; font-size: 18px; font-weight: 600; margin-top: 10px; }
+        .task-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 15px 20px; }
+        .task-card {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; text-align: center; cursor: pointer;
+            transition: 0.3s; position: relative; overflow: hidden;
         }
-        .task-item { display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; color: #333; cursor: pointer; }
-        .task-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 20px;
-        }
-        .bg-blue { background: #5c6bc0; }
-        .bg-green { background: #66bb6a; }
-        .bg-orange { background: #ffa726; }
-        .bg-red { background: #ef5350; }
-
-        /* Banner */
-        .banner {
-            margin: 0 20px;
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            border-radius: 15px;
-            padding: 20px;
-            color: white;
-            text-align: center;
-            margin-bottom: 20px;
-        }
+        .task-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.08); }
+        .task-icon { font-size: 35px; margin-bottom: 10px; }
+        .task-name { font-size: 15px; font-weight: 600; }
+        .task-reward { font-size: 12px; color: #10b981; margin-top: 5px; font-weight: bold; }
+        
+        /* The Money Making Ad Button */
+        .premium-ad-btn { grid-column: span 2; background: linear-gradient(45deg, #ef4444, #b91c1c); border: none; animation: pulseGlow 2s infinite; }
+        .premium-ad-btn:hover { transform: scale(0.98); }
 
         /* Bottom Nav */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background: white;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
-            border-top-left-radius: 20px;
-            border-top-right-radius: 20px;
-        }
-        .nav-item {
-            text-align: center;
-            color: #9e9e9e;
-            font-size: 10px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        .nav-item i { font-size: 20px; margin-bottom: 5px; display: block; }
-        .nav-item.active { color: #4b39ef; }
-        .nav-item.active .nav-icon {
-            background: #4b39ef;
-            color: white;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: -30px;
-            border: 4px solid #f4f6fc;
-        }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid rgba(255,255,255,0.1); z-index: 100; }
+        .nav-item { text-align: center; color: #64748b; font-size: 11px; cursor: pointer; transition: 0.3s; }
+        .nav-item i { font-size: 22px; display: block; margin-bottom: 5px; }
+        .nav-item.active { color: #38bdf8; text-shadow: 0 0 10px rgba(56, 189, 248, 0.5); transform: translateY(-3px); }
     </style>
 </head>
 <body>
 
-    <!-- 🔐 LOGIN SCREEN -->
-    <div id="login-screen">
-        <h1>🔥 Kumar Loot</h1>
-        <p>1 Device = 1 User Allowed</p>
-        <button id="login-btn" class="google-btn">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="G">
-            Login with Google
-        </button>
-        <p id="login-status" style="font-size: 12px; margin-top: 20px; font-weight: bold;"></p>
+    <!-- 🚀 SPLASH SCREEN -->
+    <div id="splash-screen">
+        <div class="splash-logo">🔥</div>
+        <div class="splash-text">KUMAR LOOT</div>
+        <div class="loader"></div>
     </div>
 
-    <!-- 📱 APP SCREEN -->
+    <!-- 🔐 AUTHENTICATION SCREEN -->
+    <div id="auth-screen">
+        <div class="auth-box">
+            <h2>Welcome Back!</h2>
+            <p style="color:#888; font-size:12px; margin-bottom:20px;">1 Device = 1 User Allowed</p>
+            
+            <!-- Auth Tabs -->
+            <div class="auth-tabs">
+                <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">Login</button>
+                <button class="tab-btn" id="tab-register" onclick="switchTab('register')">Register</button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-form">
+                <div class="input-group">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" id="login-email" class="custom-input" placeholder="Email Address">
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="login-pass" class="custom-input" placeholder="Password">
+                </div>
+                <button class="primary-btn" onclick="manualLogin()">Login to Account</button>
+            </div>
+
+            <!-- Register Form (Hidden initially) -->
+            <div id="register-form" style="display: none;">
+                <div class="input-group">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="reg-name" class="custom-input" placeholder="Full Name">
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-phone"></i>
+                    <input type="number" id="reg-phone" class="custom-input" placeholder="Mobile Number">
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" id="reg-email" class="custom-input" placeholder="Email Address">
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="reg-pass" class="custom-input" placeholder="Create Password">
+                </div>
+                <button class="primary-btn" onclick="manualRegister()">Create Account</button>
+            </div>
+
+            <!-- Error Messages -->
+            <div id="error-msg"></div>
+
+            <div class="divider">OR</div>
+
+            <!-- Google Login (With 'Select Account' forced) -->
+            <button class="google-btn" id="google-login-btn">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google">
+                Continue with Google
+            </button>
+        </div>
+    </div>
+
+    <!-- 📱 MAIN APP DASHBOARD -->
     <div id="app-screen">
         
-        <!-- Header -->
-        <div class="header">
-            <div class="menu-btn"><i class="fa-solid fa-bars"></i></div>
-            <div class="header-text">
-                <h3>Kumar Loot</h3>
-                <p id="user-greeting">Loading...</p>
+        <div class="app-header">
+            <div class="user-info">
+                <h3>Hello, <span id="user-greeting">User</span>!</h3>
+                <p>Welcome to Kumar Loot</p>
             </div>
-            <div class="profile-btn" id="user-initial">K</div>
+            <div class="profile-pic" id="user-initial">K</div>
         </div>
 
-        <!-- Balance Card -->
         <div class="balance-card">
-            <div class="balance-title">Available Balance</div>
-            <div class="balance-amount"><i class="fa-solid fa-coins"></i> ₹<span id="user-balance">0.10</span></div>
-            <button class="wallet-btn" onclick="window.location.href='https://t.me/KumarWalletBot'"><i class="fa-solid fa-wallet"></i> Wallet</button>
-            <div class="card-actions">
-                <div onclick="alert('Invite System Coming Soon!')"><i class="fa-solid fa-users"></i> Invite Friends</div>
-                <div onclick="window.location.href='https://t.me/KumarWalletBot'"><i class="fa-solid fa-headset"></i> Get Help</div>
-            </div>
+            <div class="balance-label">Total Earnings</div>
+            <div class="balance-amount">₹<span id="user-balance">0.10</span></div>
+            <button class="withdraw-btn" onclick="window.location.href='https://t.me/KumarWalletBot'">Withdraw</button>
         </div>
 
-        <!-- Task Grid -->
+        <div class="section-title">Daily Earning Tasks</div>
+        
         <div class="task-grid">
-            <div class="task-item" onclick="alert('Come back tomorrow for Daily Check-In!')">
-                <div class="task-icon bg-blue"><i class="fa-solid fa-check"></i></div>
-                Daily<br>Check-In
+            <!-- Normal Tasks -->
+            <div class="task-card" onclick="alert('Feature unlocking soon!')">
+                <div class="task-icon" style="color: #38bdf8;"><i class="fa-solid fa-gift"></i></div>
+                <div class="task-name">Daily Bonus</div>
+                <div class="task-reward">+ ₹0.05</div>
             </div>
-            <div class="task-item" onclick="alert('Lucky Draw will start soon!')">
-                <div class="task-icon bg-green"><i class="fa-solid fa-gift"></i></div>
-                Lucky<br>Draw
+            <div class="task-card" onclick="alert('Spin wheel is currently closed.')">
+                <div class="task-icon" style="color: #fbbf24;"><i class="fa-solid fa-dharmachakra"></i></div>
+                <div class="task-name">Spin & Win</div>
+                <div class="task-reward">Upto ₹5</div>
             </div>
-            <div class="task-item" onclick="alert('Spin Wheel is under maintenance.')">
-                <div class="task-icon bg-orange"><i class="fa-solid fa-dharmachakra"></i></div>
-                Spin &<br>Win
-            </div>
-            <!-- 🔥 ADSTERRA EARNING BUTTON 🔥 -->
-            <div class="task-item" onclick="watchAdAndEarn()">
-                <div class="task-icon bg-red"><i class="fa-solid fa-play"></i></div>
-                Watch &<br>Earn
-            </div>
-        </div>
 
-        <!-- Banner -->
-        <div class="banner">
-            <h3>Subscribe Our Telegram</h3>
-            <p>Get Daily Promo Codes & Updates</p>
-            <button style="background:#ef5350; color:white; border:none; padding:8px 20px; border-radius:20px; font-weight:bold; cursor:pointer;" onclick="window.location.href='https://t.me/KumarWalletBot'">JOIN NOW</button>
+            <!-- 🔥 ADSTERRA AD BUTTON 🔥 -->
+            <div class="task-card premium-ad-btn" onclick="watchAdAndEarn()">
+                <div class="task-icon" style="color: #fff;"><i class="fa-solid fa-play-circle"></i></div>
+                <div class="task-name" style="color: #fff; font-size: 18px;">Watch Ad & Earn Real Cash</div>
+                <div class="task-reward" style="color: #fbbf24; font-size: 14px;">Instant ₹0.10 Reward</div>
+            </div>
         </div>
 
         <!-- Bottom Navigation -->
         <div class="bottom-nav">
-            <div class="nav-item"><i class="fa-solid fa-tags"></i>Offers</div>
-            <div class="nav-item"><i class="fa-solid fa-face-smile"></i>Rewards</div>
-            <div class="nav-item active"><div class="nav-icon"><i class="fa-solid fa-house"></i></div>Home</div>
+            <div class="nav-item active"><i class="fa-solid fa-house"></i>Home</div>
             <div class="nav-item" onclick="window.location.href='https://t.me/KumarWalletBot'"><i class="fa-solid fa-wallet"></i>Wallet</div>
-            <div class="nav-item"><i class="fa-solid fa-user-plus"></i>Refer</div>
+            <div class="nav-item" onclick="alert('Invite feature coming soon!')"><i class="fa-solid fa-users"></i>Refer</div>
+            <div class="nav-item" onclick="logOut()"><i class="fa-solid fa-right-from-bracket"></i>Logout</div>
         </div>
 
     </div>
 
-    <!-- 🛠️ FIREBASE LOGIC -->
+    <!-- 🛠️ FIREBASE LOGIC (Massive Script Setup) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        // 🚨 इथे Popup च्या ऐवजी Redirect वापरलं आहे (मोबाईलमध्ये कधीच फेल होणार नाही)
-        import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getDatabase, ref, get, set, child } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // तुझी Firebase Config
+        // 🚨 तुझी Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyCewAWzj09CsJWJRqZ16TmWN6Z-d0ATyaM",
             authDomain: "kumar-loot.firebaseapp.com",
@@ -276,22 +249,83 @@
         const db = getDatabase(app);
         const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4').then(FingerprintJS => FingerprintJS.load());
 
-        // Redirect Result Check (लॉगिन झाल्यावर परत आल्यावर)
-        getRedirectResult(auth).catch((error) => {
-            document.getElementById('login-status').innerText = "Login Failed: " + error.message;
+        const errBox = document.getElementById('error-msg');
+
+        // Splash Screen Logic
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('splash-screen').style.opacity = '0';
+                setTimeout(() => document.getElementById('splash-screen').style.display = 'none', 500);
+            }, 2000); // 2 Seconds splash
         });
 
-        // 1️⃣ लॉगिन बटण क्लिक केल्यावर थेट गुगलच्या पेजवर पाठवणे
-        document.getElementById('login-btn').addEventListener('click', () => {
-            document.getElementById('login-status').innerText = "Redirecting to Google...";
+        // Toggle Login / Register UI
+        window.switchTab = function(tab) {
+            document.getElementById('tab-login').classList.remove('active');
+            document.getElementById('tab-register').classList.remove('active');
+            
+            if(tab === 'login') {
+                document.getElementById('tab-login').classList.add('active');
+                document.getElementById('login-form').style.display = 'block';
+                document.getElementById('register-form').style.display = 'none';
+            } else {
+                document.getElementById('tab-register').classList.add('active');
+                document.getElementById('login-form').style.display = 'none';
+                document.getElementById('register-form').style.display = 'block';
+            }
+            errBox.innerText = "";
+        };
+
+        // 1️⃣ Google Login (Forcing Account Chooser)
+        document.getElementById('google-login-btn').addEventListener('click', () => {
+            errBox.innerText = "Connecting to Google...";
             const provider = new GoogleAuthProvider();
-            signInWithRedirect(auth, provider); // डायरेक्ट गुगल पेज उघडेल
+            // 🚨 हा कोड युझरला त्याचे सगळे Gmail दाखवेल (Account Chooser)
+            provider.setCustomParameters({ prompt: 'select_account' });
+            signInWithRedirect(auth, provider);
         });
 
-        // 2️⃣ युझर तपासणे (1 Device = 1 User)
+        getRedirectResult(auth).catch((error) => { errBox.innerText = "Google Login Failed: " + error.message; });
+
+        // 2️⃣ Custom Manual Register
+        window.manualRegister = async function() {
+            const name = document.getElementById('reg-name').value;
+            const phone = document.getElementById('reg-phone').value;
+            const email = document.getElementById('reg-email').value;
+            const pass = document.getElementById('reg-pass').value;
+
+            if(!name || !phone || !email || !pass) { errBox.innerText = "All fields are required!"; return; }
+            if(pass.length < 6) { errBox.innerText = "Password must be at least 6 characters."; return; }
+
+            try {
+                errBox.innerText = "Creating account...";
+                const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+                // Save extra details in Database
+                set(ref(db, `users/${userCredential.user.uid}`), { fullName: name, phone: phone, email: email });
+                errBox.innerText = "Account Created Successfully!";
+            } catch (error) {
+                errBox.innerText = "Error: " + error.message;
+            }
+        };
+
+        // 3️⃣ Custom Manual Login
+        window.manualLogin = async function() {
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-pass').value;
+
+            if(!email || !pass) { errBox.innerText = "Enter email and password!"; return; }
+
+            try {
+                errBox.innerText = "Logging in...";
+                await signInWithEmailAndPassword(auth, email, pass);
+            } catch (error) {
+                errBox.innerText = "Invalid Email or Password!";
+            }
+        };
+
+        // 4️⃣ Check User & Anti-Hack Device Lock
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                document.getElementById('login-status').innerText = "Verifying Device Security...";
                 try {
                     const fp = await fpPromise;
                     const result = await fp.get();
@@ -301,31 +335,33 @@
                     const deviceSnapshot = await get(child(dbRef, `devices/${deviceId}`));
 
                     if (deviceSnapshot.exists() && deviceSnapshot.val() !== user.uid) {
-                        alert("⚠️ SECURITY ALERT: This device is already registered with another account. 1 Device = 1 Account allowed!");
-                        auth.signOut();
+                        alert("⚠️ HACK ATTEMPT BLOCKED: This device is registered to another user!");
+                        signOut(auth);
+                        return;
                     } else {
-                        if (!deviceSnapshot.exists()) {
-                            set(ref(db, `devices/${deviceId}`), user.uid);
-                        }
+                        if (!deviceSnapshot.exists()) { set(ref(db, `devices/${deviceId}`), user.uid); }
 
-                        // लॉगिन यशस्वी झालं! UI बदला
-                        document.getElementById('login-screen').style.display = 'none';
+                        // Setup Dashboard UI
+                        document.getElementById('auth-screen').style.display = 'none';
                         document.getElementById('app-screen').style.display = 'block';
                         
-                        let firstName = user.displayName ? user.displayName.split(" ")[0] : "User";
-                        document.getElementById('user-greeting').innerText = "Good evening, " + firstName + "!";
-                        document.getElementById('user-initial').innerText = firstName.charAt(0).toUpperCase();
+                        let displayN = user.displayName ? user.displayName.split(" ")[0] : (user.email.split("@")[0] || "User");
+                        document.getElementById('user-greeting').innerText = displayN;
+                        document.getElementById('user-initial').innerText = displayN.charAt(0).toUpperCase();
                     }
-                } catch (err) {
-                    document.getElementById('login-status').innerText = "Error verifying device. Please reload.";
-                }
+                } catch (err) { errBox.innerText = "Security check failed. Try again."; }
             } else {
-                document.getElementById('login-screen').style.display = 'flex';
+                document.getElementById('auth-screen').style.display = 'flex';
                 document.getElementById('app-screen').style.display = 'none';
             }
         });
 
-        // 3️⃣ 💸 Watch & Earn Button Logic
+        // Logout
+        window.logOut = function() {
+            signOut(auth).then(() => { window.location.reload(); });
+        }
+
+        // 5️⃣ 💸 WATCH & EARN (Adsterra Direct Link)
         window.watchAdAndEarn = function() {
             // 🚨🚨 इथे तुझी Adsterra ची Direct Link टाक 🚨🚨
             const adsterraLink = "TUZHI_ADSTERRA_DIRECT_LINK_ITHE_TAK"; 
@@ -336,13 +372,12 @@
 
             if (now - lastClick < cooldownTime) {
                 let remainingMins = Math.ceil((cooldownTime - (now - lastClick)) / 60000);
-                alert("⏳ Please wait " + remainingMins + " minutes before watching another ad!");
+                alert("⏳ Security Lock: Please wait " + remainingMins + " minutes to watch the next ad!");
                 return;
             }
 
             localStorage.setItem("last_ad_click", now);
             window.open(adsterraLink, '_blank');
-            alert("🚀 Ad opened! Wait 15 seconds on the page to verify task. Balance will update shortly.");
         };
     </script>
 </body>
