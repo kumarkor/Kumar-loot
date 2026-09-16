@@ -3,170 +3,352 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kumar Loot - Earn Daily Rewards</title>
+    <title>Kumar Loot - Earning App</title>
+    <!-- Google Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f6fc;
             margin: 0;
             padding: 0;
-            font-family: 'Arial', sans-serif;
-            background-color: #0f172a;
+            user-select: none;
+        }
+
+        /* 🔐 Login Screen */
+        #login-screen {
+            display: flex;
+            height: 100vh;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #4b39ef, #3020b8);
             color: white;
             text-align: center;
         }
-        /* 🌟 Main Menu Bar */
-        .navbar {
-            background-color: #1e293b;
+        #login-screen h1 { font-size: 32px; margin-bottom: 10px; }
+        .google-btn {
+            background: white;
+            color: #333;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .google-btn img { width: 24px; }
+
+        /* 📱 Main App Screen (Hidden by default) */
+        #app-screen { display: none; padding-bottom: 80px; }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: white;
+        }
+        .header-text h3 { margin: 0; color: #fbc02d; font-size: 18px; text-transform: uppercase; }
+        .header-text p { margin: 0; color: #4b39ef; font-weight: 600; font-size: 14px; }
+        .menu-btn, .profile-btn {
+            background: #4b39ef;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+        }
+        .profile-btn { background: #81c784; border-radius: 50%; font-weight: bold; }
+
+        /* Balance Card */
+        .balance-card {
+            background: #4b39ef;
+            margin: 0 20px;
+            border-radius: 20px;
+            padding: 20px;
+            color: white;
+            box-shadow: 0 5px 15px rgba(75, 57, 239, 0.4);
+            position: relative;
+        }
+        .balance-title { font-size: 12px; opacity: 0.9; }
+        .balance-amount { font-size: 32px; font-weight: bold; margin: 5px 0; display: flex; align-items: center; gap: 10px; }
+        .balance-amount i { color: #fbc02d; }
+        .wallet-btn {
+            position: absolute;
+            right: 20px;
+            top: 30px;
+            background: white;
+            color: #4b39ef;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .card-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            padding-top: 15px;
+        }
+        .card-actions div { font-size: 12px; font-weight: 600; cursor: pointer; }
+
+        /* Grid Tasks */
+        .task-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            padding: 25px 20px;
+            text-align: center;
+        }
+        .task-item { display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; color: #333; cursor: pointer; }
+        .task-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 20px;
+        }
+        .bg-blue { background: #5c6bc0; }
+        .bg-green { background: #66bb6a; }
+        .bg-orange { background: #ffa726; }
+        .bg-red { background: #ef5350; }
+
+        /* Banner */
+        .banner {
+            margin: 0 20px;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: white;
             display: flex;
             justify-content: space-around;
-            padding: 12px 0;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
         }
-        .navbar a {
-            color: #cbd5e1;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: bold;
-            transition: 0.2s;
-        }
-        .navbar a:hover, .navbar a.active {
-            color: #38bdf8;
-        }
-        .header {
-            padding: 20px 20px 10px 20px;
-            font-size: 22px;
-            font-weight: bold;
-            color: #fbbf24;
-        }
-        .balance-card {
-            background: linear-gradient(135deg, #10b981, #059669);
-            margin: 15px 20px;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-        .balance-card h2 { margin: 0; font-size: 32px; }
-        .balance-card p { margin: 5px 0 0 0; font-size: 13px; opacity: 0.9; }
-        
-        .tasks-container {
-            padding: 10px 20px;
-        }
-        .task-box {
-            background-color: #1e293b;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 10px;
-            border: 1px solid #334155;
-            text-align: left;
-        }
-        .task-box h3 { margin: 0 0 8px 0; color: #38bdf8; font-size: 16px; }
-        .task-box p { margin: 0 0 12px 0; font-size: 13px; color: #cbd5e1; }
-        
-        .loot-btn {
-            display: block;
-            width: 100%;
-            background-color: #ef4444;
-            color: white;
-            text-decoration: none;
+        .nav-item {
             text-align: center;
-            padding: 12px 0;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 15px;
-            border: none;
+            color: #9e9e9e;
+            font-size: 10px;
+            font-weight: 600;
             cursor: pointer;
-            transition: 0.3s;
         }
-        .loot-btn:hover { background-color: #dc2626; }
-        .loot-btn:disabled { background-color: #475569; cursor: not-allowed; }
-        
-        .footer {
-            margin-top: 30px;
-            padding: 20px;
-            font-size: 12px;
-            color: #64748b;
+        .nav-item i { font-size: 20px; margin-bottom: 5px; display: block; }
+        .nav-item.active { color: #4b39ef; }
+        .nav-item.active .nav-icon {
+            background: #4b39ef;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: -30px;
+            border: 4px solid #f4f6fc;
         }
     </style>
 </head>
 <body>
 
-    <!-- 🌟 Main Menu -->
-    <div class="navbar">
-        <a href="#" class="active">🏠 Home</a>
-        <a href="#" onclick="alert('Complete tasks below to earn balance!')">💰 Earn</a>
-        <a href="https://t.me/KumarWalletBot" target="_blank">🤖 Telegram Bot</a>
-        <a href="#" onclick="alert('Withdrawals are processed securely via our Telegram Bot!')">📜 Wallet</a>
+    <!-- 🔐 LOGIN SCREEN -->
+    <div id="login-screen">
+        <h1>🔥 Kumar Loot</h1>
+        <p>1 Device = 1 User Allowed</p>
+        <button id="login-btn" class="google-btn">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="G">
+            Login with Google
+        </button>
+        <p id="login-status" style="font-size: 12px; margin-top: 20px;"></p>
     </div>
 
-    <div class="header">
-        🔥 Kumar Loot
-    </div>
-
-    <div class="balance-card">
-        <h2>₹0.10</h2>
-        <p>Available Balance</p>
-    </div>
-
-    <div class="tasks-container">
-        <h2>🎁 Today's Top Loot</h2>
-
-        <!-- Task 1 (Adsterra Link with Anti-Spam Protection) -->
-        <div class="task-box">
-            <h3>💸 Watch Ad & Earn ₹0.10</h3>
-            <p>Click below, view the ad page for 15 seconds, and earn your reward safely.</p>
-            <!-- 🚨 इथे तुझी Adsterra ची Direct Link टाक 🚨 -->
-            <button id="btn1" class="loot-btn" onclick="openAd('TUZHI_ADSTERRA_DIRECT_LINK_ITHE_TAK', 'btn1')">🚀 Claim ₹0.10 Now</button>
+    <!-- 📱 APP SCREEN -->
+    <div id="app-screen">
+        
+        <!-- Header -->
+        <div class="header">
+            <div class="menu-btn"><i class="fa-solid fa-bars"></i></div>
+            <div class="header-text">
+                <h3>Kumar Loot</h3>
+                <p id="user-greeting">Good evening, User!</p>
+            </div>
+            <div class="profile-btn" id="user-initial">K</div>
         </div>
 
-        <!-- Task 2 -->
-        <div class="task-box">
-            <h3>🎁 Mega Bonus Offer</h3>
-            <p>Unlock extra bonus rewards by visiting our partner platform.</p>
-            <!-- 🚨 इथे परत तुझी Adsterra ची Direct Link टाक 🚨 -->
-            <button id="btn2" class="loot-btn" onclick="openAd('TUZHI_ADSTERRA_DIRECT_LINK_ITHE_TAK', 'btn2')">💰 Unlock Bonus</button>
+        <!-- Balance Card -->
+        <div class="balance-card">
+            <div class="balance-title">Available Balance</div>
+            <div class="balance-amount"><i class="fa-solid fa-coins"></i> ₹<span id="user-balance">0.00</span></div>
+            <button class="wallet-btn" onclick="window.location.href='https://t.me/KumarWalletBot'"><i class="fa-solid fa-wallet"></i> Wallet</button>
+            <div class="card-actions">
+                <div><i class="fa-solid fa-users"></i> Invite Friends</div>
+                <div><i class="fa-solid fa-headset"></i> Get Help</div>
+            </div>
         </div>
+
+        <!-- Task Grid -->
+        <div class="task-grid">
+            <div class="task-item" onclick="alert('Come back tomorrow for Daily Check-In!')">
+                <div class="task-icon bg-blue"><i class="fa-solid fa-check"></i></div>
+                Daily<br>Check-In
+            </div>
+            <div class="task-item" onclick="alert('Lucky Draw will start soon!')">
+                <div class="task-icon bg-green"><i class="fa-solid fa-gift"></i></div>
+                Lucky<br>Draw
+            </div>
+            <div class="task-item" onclick="alert('Spin Wheel is under maintenance.')">
+                <div class="task-icon bg-orange"><i class="fa-solid fa-dharmachakra"></i></div>
+                Spin &<br>Win
+            </div>
+            <!-- 🔥 ADSTERRA EARNING BUTTON 🔥 -->
+            <div class="task-item" onclick="watchAdAndEarn()">
+                <div class="task-icon bg-red"><i class="fa-solid fa-play"></i></div>
+                Watch &<br>Earn
+            </div>
+        </div>
+
+        <!-- Banner -->
+        <div class="banner">
+            <h3>Subscribe Our Telegram</h3>
+            <p>Get Daily Promo Codes & Updates</p>
+            <button style="background:#ef5350; color:white; border:none; padding:8px 20px; border-radius:20px; font-weight:bold; cursor:pointer;" onclick="window.location.href='https://t.me/KumarWalletBot'">JOIN NOW</button>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item"><i class="fa-solid fa-tags"></i>Offers</div>
+            <div class="nav-item"><i class="fa-solid fa-face-smile"></i>Rewards</div>
+            <div class="nav-item active"><div class="nav-icon"><i class="fa-solid fa-house"></i></div>Home</div>
+            <div class="nav-item"><i class="fa-solid fa-wallet"></i>Wallet</div>
+            <div class="nav-item"><i class="fa-solid fa-user-plus"></i>Refer</div>
+        </div>
+
     </div>
 
-    <div class="footer">
-        © 2026 Kumar Loot. All rights reserved.<br>
-        Protected by Anti-Spam Security System.
-    </div>
+    <!-- 🛠️ FIREBASE & LOGIC (MODULE SCRIPT) -->
+    <script type="module">
+        // Firebase Modular SDK Imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, get, set, child } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    <script>
-        function openAd(url, btnId) {
-            var btn = document.getElementById(btnId);
+        // 1️⃣ तुझी Firebase Config (तू दिलेली)
+        const firebaseConfig = {
+            apiKey: "AIzaSyCewAWzj09CsJWJRqZ16TmWN6Z-d0ATyaM",
+            authDomain: "kumar-loot.firebaseapp.com",
+            projectId: "kumar-loot",
+            storageBucket: "kumar-loot.firebasestorage.app",
+            messagingSenderId: "264932703737",
+            appId: "1:264932703737:web:2cc50a8bbe1923917b5128"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+
+        // 2️⃣ Device Fingerprint Load करणे (Anti-Hack साठी)
+        const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4').then(FingerprintJS => FingerprintJS.load());
+
+        // 3️⃣ Login Button Logic
+        document.getElementById('login-btn').addEventListener('click', () => {
+            const provider = new GoogleAuthProvider();
+            document.getElementById('login-status').innerText = "Opening Google Login...";
+            signInWithPopup(auth, provider).catch(err => {
+                document.getElementById('login-status').innerText = "Login failed: " + err.message;
+            });
+        });
+
+        // 4️⃣ Auth State Change (लॉगिन झाल्यावर काय करायचं)
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                document.getElementById('login-status').innerText = "Verifying Device Security...";
+                
+                // Device ID काढणे
+                const fp = await fpPromise;
+                const result = await fp.get();
+                const deviceId = result.visitorId;
+
+                // डेटाबेसमध्ये चेक करणे
+                const dbRef = ref(db);
+                const deviceSnapshot = await get(child(dbRef, `devices/${deviceId}`));
+
+                if (deviceSnapshot.exists() && deviceSnapshot.val() !== user.uid) {
+                    // 🚨 हॅकर पकडला! एका फोनवर दुसरा Gmail टाकत आहे
+                    alert("⚠️ SECURITY ALERT: This device is already registered with another account. 1 Device = 1 Account allowed!");
+                    auth.signOut();
+                } else {
+                    // ✅ सेफ युझर! त्याला ॲपमध्ये पाठवा
+                    if (!deviceSnapshot.exists()) {
+                        // नवीन डिव्हाईस सेव्ह करा
+                        set(ref(db, `devices/${deviceId}`), user.uid);
+                    }
+
+                    // UI अपडेट करा
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('app-screen').style.display = 'block';
+                    
+                    let firstName = user.displayName ? user.displayName.split(" ")[0] : "User";
+                    document.getElementById('user-greeting').innerText = "Good evening, " + firstName + "!";
+                    document.getElementById('user-initial').innerText = firstName.charAt(0).toUpperCase();
+                }
+            } else {
+                // युझर लॉगिन नाहीये, Login पेज दाखवा
+                document.getElementById('login-screen').style.display = 'flex';
+                document.getElementById('app-screen').style.display = 'none';
+            }
+        });
+
+        // 5️⃣ 💸 WATCH & EARN BUTTON LOGIC (Global Function)
+        window.watchAdAndEarn = function() {
+            // 🚨🚨 इथे तुझी Adsterra ची Direct Link टाक 🚨🚨
+            const adsterraLink = "TUZHI_ADSTERRA_DIRECT_LINK_ITHE_TAK"; 
             
-            // 🛡️ Anti-Spam Cooldown Logic (5 मिनिटांचा लॉक)
-            var lastClick = localStorage.getItem(btnId + "_time") || 0;
-            var now = new Date().getTime();
-            var cooldownTime = 5 * 60 * 1000; // 5 मिनिटे
+            // Cooldown Logic (५ मिनिटे)
+            const lastClick = localStorage.getItem("last_ad_click") || 0;
+            const now = new Date().getTime();
+            const cooldownTime = 5 * 60 * 1000; // 5 Mins
 
             if (now - lastClick < cooldownTime) {
-                var remainingMins = Math.ceil((cooldownTime - (now - lastClick)) / 60000);
-                alert("⏳ Anti-Spam Protection: Please wait " + remainingMins + " minutes before clicking this ad again!");
+                let remainingMins = Math.ceil((cooldownTime - (now - lastClick)) / 60000);
+                alert("⏳ Please wait " + remainingMins + " minutes before watching another ad!");
                 return;
             }
 
-            // Save click time
-            localStorage.setItem(btnId + "_time", now);
-
-            // Open Adsterra link
-            window.open(url, '_blank');
-
-            // Temporarily disable button
-            btn.disabled = true;
-            btn.style.backgroundColor = "#475569";
-            btn.innerText = "⏳ Please wait...";
-
-            setTimeout(function() {
-                btn.disabled = false;
-                btn.style.backgroundColor = "#ef4444";
-                btn.innerText = "🚀 Claim ₹0.10 Now";
-            }, 10000); // 10 सेकंदांनी बटण परत सुरू होईल
-        }
+            // Save click time and open ad
+            localStorage.setItem("last_ad_click", now);
+            window.open(adsterraLink, '_blank');
+            
+            alert("🚀 Ad opened! Wait 15 seconds on the page to verify task. Balance will update shortly.");
+        };
     </script>
-
 </body>
 </html>
