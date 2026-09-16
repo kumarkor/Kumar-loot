@@ -13,23 +13,42 @@
             color: white;
             text-align: center;
         }
-        .header {
+        /* 🌟 Main Menu Bar */
+        .navbar {
             background-color: #1e293b;
-            padding: 20px;
-            font-size: 24px;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .navbar a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .navbar a:hover, .navbar a.active {
+            color: #38bdf8;
+        }
+        .header {
+            padding: 20px 20px 10px 20px;
+            font-size: 22px;
             font-weight: bold;
             color: #fbbf24;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
         .balance-card {
             background: linear-gradient(135deg, #10b981, #059669);
-            margin: 20px;
+            margin: 15px 20px;
             padding: 20px;
             border-radius: 15px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
-        .balance-card h2 { margin: 0; font-size: 36px; }
-        .balance-card p { margin: 5px 0 0 0; font-size: 14px; opacity: 0.9; }
+        .balance-card h2 { margin: 0; font-size: 32px; }
+        .balance-card p { margin: 5px 0 0 0; font-size: 13px; opacity: 0.9; }
         
         .tasks-container {
             padding: 10px 20px;
@@ -42,8 +61,8 @@
             border: 1px solid #334155;
             text-align: left;
         }
-        .task-box h3 { margin: 0 0 10px 0; color: #38bdf8; font-size: 18px; }
-        .task-box p { margin: 0 0 15px 0; font-size: 14px; color: #cbd5e1; }
+        .task-box h3 { margin: 0 0 8px 0; color: #38bdf8; font-size: 16px; }
+        .task-box p { margin: 0 0 12px 0; font-size: 13px; color: #cbd5e1; }
         
         .loot-btn {
             display: block;
@@ -55,10 +74,13 @@
             padding: 12px 0;
             border-radius: 8px;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 15px;
+            border: none;
+            cursor: pointer;
             transition: 0.3s;
         }
-        .loot-btn:hover { background-color: #dc2626; transform: scale(0.98); }
+        .loot-btn:hover { background-color: #dc2626; }
+        .loot-btn:disabled { background-color: #475569; cursor: not-allowed; }
         
         .footer {
             margin-top: 30px;
@@ -70,41 +92,81 @@
 </head>
 <body>
 
+    <!-- 🌟 Main Menu -->
+    <div class="navbar">
+        <a href="#" class="active">🏠 Home</a>
+        <a href="#" onclick="alert('Complete tasks below to earn balance!')">💰 Earn</a>
+        <a href="https://t.me/KumarWalletBot" target="_blank">🤖 Telegram Bot</a>
+        <a href="#" onclick="alert('Withdrawals are processed securely via our Telegram Bot!')">📜 Wallet</a>
+    </div>
+
     <div class="header">
         🔥 Kumar Loot
     </div>
 
     <div class="balance-card">
-        <h2>₹0.00</h2>
-        <p>Available Balance (Login to sync)</p>
+        <h2>₹0.10</h2>
+        <p>Available Balance</p>
     </div>
 
     <div class="tasks-container">
         <h2>🎁 Today's Top Loot</h2>
 
-        <!-- Task 1 (Adsterra Direct Link) -->
+        <!-- Task 1 (Adsterra Link with Anti-Spam Protection) -->
         <div class="task-box">
-            <h3>💸 Watch Ad & Earn ₹10</h3>
-            <p>Click below, wait for 15 seconds on the website, and claim your instant reward!</p>
+            <h3>💸 Watch Ad & Earn ₹0.10</h3>
+            <p>Click below, view the ad page for 15 seconds, and earn your reward safely.</p>
             <!-- 🚨 इथे तुझी Adsterra ची Direct Link टाक 🚨 -->
-            <a href="TUZHI_ADSTERRA_DIRECT_LINK_ITHE_TAK" class="loot-btn" target="_blank">🚀 Claim ₹10 Now</a>
+            <button id="btn1" class="loot-btn" onclick="openAd('TUZHI_ADSTERRA_DIRECT_LINK_ITHE_TAK', 'btn1')">🚀 Claim ₹0.10 Now</button>
         </div>
 
-        <!-- Task 2 (Adsterra Direct Link) -->
+        <!-- Task 2 -->
         <div class="task-box">
             <h3>🎁 Mega Bonus Offer</h3>
-            <p>Unlock the mega bonus by completing this quick step. 100% verified!</p>
+            <p>Unlock extra bonus rewards by visiting our partner platform.</p>
             <!-- 🚨 इथे परत तुझी Adsterra ची Direct Link टाक 🚨 -->
-            <a href="TUZHI_ADSTERRA_DIRECT_LINK_ITHE_TAK" class="loot-btn" target="_blank">💰 Unlock Bonus</a>
+            <button id="btn2" class="loot-btn" onclick="openAd('TUZHI_ADSTERRA_DIRECT_LINK_ITHE_TAK', 'btn2')">💰 Unlock Bonus</button>
         </div>
     </div>
 
     <div class="footer">
         © 2026 Kumar Loot. All rights reserved.<br>
-        Join our Telegram Bot for withdrawal!
+        Protected by Anti-Spam Security System.
     </div>
 
-    <!-- 🚨 भविष्यात तू इथे Adsterra चा Social Bar Script Code टाकू शकतोस 🚨 -->
+    <script>
+        function openAd(url, btnId) {
+            var btn = document.getElementById(btnId);
+            
+            // 🛡️ Anti-Spam Cooldown Logic (5 मिनिटांचा लॉक)
+            var lastClick = localStorage.getItem(btnId + "_time") || 0;
+            var now = new Date().getTime();
+            var cooldownTime = 5 * 60 * 1000; // 5 मिनिटे
+
+            if (now - lastClick < cooldownTime) {
+                var remainingMins = Math.ceil((cooldownTime - (now - lastClick)) / 60000);
+                alert("⏳ Anti-Spam Protection: Please wait " + remainingMins + " minutes before clicking this ad again!");
+                return;
+            }
+
+            // Save click time
+            localStorage.setItem(btnId + "_time", now);
+
+            // Open Adsterra link
+            window.open(url, '_blank');
+
+            // Temporarily disable button
+            btn.disabled = true;
+            btn.style.backgroundColor = "#475569";
+            btn.innerText = "⏳ Please wait...";
+
+            setTimeout(function() {
+                btn.disabled = false;
+                btn.style.backgroundColor = "#ef4444";
+                btn.innerText = "🚀 Claim ₹0.10 Now";
+            }, 10000); // 10 सेकंदांनी बटण परत सुरू होईल
+        }
+    </script>
 
 </body>
 </html>
