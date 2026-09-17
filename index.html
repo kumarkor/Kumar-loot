@@ -12,6 +12,10 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
         body { background: #0f172a; color: #fff; user-select: none; overflow-x: hidden; }
         
+        /* 🚫 NO INTERNET SCREEN */
+        #no-internet { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0f172a; z-index: 99999; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        #no-internet i { font-size: 60px; color: #ef4444; margin-bottom: 20px; animation: pulse 2s infinite; }
+        
         /* 🔐 AUTH SCREENS */
         #auth-screen { display: flex; min-height: 100vh; padding: 20px; align-items: center; justify-content: center; flex-direction: column; }
         .auth-box { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 30px; width: 100%; max-width: 380px; text-align: center; }
@@ -32,25 +36,30 @@
         .header { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: rgba(0,0,0,0.2); }
         .balance-card { margin: 15px; padding: 20px; border-radius: 15px; background: linear-gradient(135deg, #10b981, #059669); text-align: center; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3); }
         
-        /* 🎮 GAME SECTION */
+        /* 🎮 NEW GAME SECTION (MYSTERY BOX) */
         .game-section { margin: 20px; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); text-align: center; }
-        .coin { width: 100px; height: 100px; background: #fbbf24; border-radius: 50%; margin: 20px auto; display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: bold; color: #b45309; border: 5px solid #d97706; transition: transform 1s; }
-        .game-btn { padding: 10px 20px; border: none; border-radius: 10px; font-weight: bold; margin: 5px; cursor: pointer; }
-        .btn-heads { background: #3b82f6; color: white; }
-        .btn-tails { background: #ef4444; color: white; }
-        .claim-btn { display: none; width: 100%; padding: 15px; background: #ef4444; color: white; font-weight: bold; border: none; border-radius: 10px; margin-top: 15px; animation: pulse 1s infinite; cursor: pointer; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        .gift-box { font-size: 80px; margin: 20px auto; cursor: pointer; transition: transform 0.3s; }
+        .gift-box:active { transform: scale(0.9); }
+        .timer-display { font-size: 24px; font-weight: bold; color: #fbbf24; margin: 15px 0; letter-spacing: 2px; }
+        .claim-btn { display: none; width: 100%; padding: 15px; background: #ef4444; color: white; font-weight: bold; border: none; border-radius: 10px; margin-top: 15px; cursor: pointer; }
+        
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
 
+    <!-- 🚫 NO INTERNET SCREEN -->
+    <div id="no-internet">
+        <i class="fa-solid fa-wifi"></i>
+        <h2>No Internet Connection</h2>
+        <p style="color: #aaa; margin-top: 10px; font-size: 14px;">Please check your network and try again.</p>
+    </div>
+
     <!-- 🔐 LOGIN / REGISTER SCREENS -->
     <div id="auth-screen">
-        
         <!-- LOGIN VIEW -->
         <div class="auth-box" id="login-view">
             <h2 style="color: #38bdf8; margin-bottom: 20px;">🔥 Kumar Loot</h2>
-            
             <div class="input-group">
                 <i class="fa-solid fa-phone"></i>
                 <input type="number" id="login-num" class="custom-input" placeholder="Mobile Number">
@@ -59,7 +68,6 @@
                 <i class="fa-solid fa-lock"></i>
                 <input type="password" id="login-pass" class="custom-input" placeholder="Password">
             </div>
-            
             <button class="primary-btn" onclick="login()">Login</button>
             <div id="login-err" style="color: #ff4d4d; font-size: 12px; margin-top: 10px;"></div>
             <p class="switch-text" onclick="switchView('register')">New user? Register here</p>
@@ -68,7 +76,6 @@
         <!-- REGISTER VIEW -->
         <div class="auth-box" id="register-view" style="display: none;">
             <h2 style="color: #10b981; margin-bottom: 10px;">Create Account</h2>
-            
             <div class="input-group">
                 <i class="fa-solid fa-phone"></i>
                 <input type="number" id="reg-num" class="custom-input" placeholder="Mobile Number">
@@ -77,15 +84,12 @@
                 <i class="fa-solid fa-lock"></i>
                 <input type="password" id="reg-pass" class="custom-input" placeholder="Create Password">
             </div>
-
-            <!-- Math Captcha -->
             <div class="math-box">
                 <h4>Solve any 2 to prove you are human</h4>
                 <div class="math-row"><span id="q1"></span> <input type="number" id="a1" class="math-input"></div>
                 <div class="math-row"><span id="q2"></span> <input type="number" id="a2" class="math-input"></div>
                 <div class="math-row"><span id="q3"></span> <input type="number" id="a3" class="math-input"></div>
             </div>
-            
             <button class="primary-btn" onclick="register()">Create Account</button>
             <div id="reg-err" style="color: #ff4d4d; font-size: 12px; margin-top: 10px;"></div>
             <p class="switch-text" onclick="switchView('login')">Already have an account? Login</p>
@@ -104,32 +108,41 @@
             <div style="font-size: 35px; font-weight: 800;">₹<span id="balance">0.00</span></div>
         </div>
 
-        <!-- 🎮 LIVE GAME SECTION -->
+        <!-- 🎮 1 HOUR MYSTERY BOX GAME -->
         <div class="game-section">
-            <h3 style="color: #fbbf24;">Coin Flip Challenge</h3>
-            <p style="font-size: 12px; color: #aaa;">Win the toss to claim ₹0.10 Adsterra Bonus!</p>
+            <h3 style="color: #fbbf24;">Hourly Mystery Box</h3>
+            <p style="font-size: 12px; color: #aaa;">Open the box every 1 hour to get fixed ₹0.10!</p>
             
-            <div class="coin" id="coin-display">?</div>
+            <div class="gift-box" id="gift-box" onclick="openBox()">🎁</div>
             
-            <div id="game-controls">
-                <button class="game-btn btn-heads" onclick="playGame('Heads')">Choose HEADS</button>
-                <button class="game-btn btn-tails" onclick="playGame('Tails')">Choose TAILS</button>
-            </div>
+            <div class="timer-display" id="live-timer" style="display: none;">00:00:00</div>
+            <p id="game-status" style="margin-top: 10px; font-weight: bold;"></p>
             
-            <p id="game-result" style="margin-top: 15px; font-weight: bold;"></p>
-            
-            <!-- 🔥 Claim Ad Button (Hidden until win) -->
-            <button id="claim-ad-btn" class="claim-btn" onclick="claimBonus()">🎁 Watch Ad to Claim ₹0.10</button>
+            <button id="claim-ad-btn" class="claim-btn" onclick="claimBonus()">📺 Watch Ad to Claim ₹0.10</button>
         </div>
     </div>
 
-    <!-- 🛠️ FIREBASE & LOGIC SCRIPT -->
+    <!-- 🛠️ LOGIC SCRIPT -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getDatabase, ref, get, set, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // 🚨 तुझी Firebase Config
+        // 🚨 NETWORK CHECKER (Offline/Online)
+        function checkNetwork() {
+            if (!navigator.onLine) {
+                document.getElementById('no-internet').style.display = 'flex';
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('app-screen').style.display = 'none';
+            } else {
+                document.getElementById('no-internet').style.display = 'none';
+                // Will revert to normal flow automatically
+            }
+        }
+        window.addEventListener('online', () => { window.location.reload(); });
+        window.addEventListener('offline', checkNetwork);
+        checkNetwork(); // Initial check
+
         const firebaseConfig = {
             apiKey: "AIzaSyCewAWzj09CsJWJRqZ16TmWN6Z-d0ATyaM",
             authDomain: "kumar-loot.firebaseapp.com",
@@ -142,17 +155,14 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getDatabase(app);
-
         let currentUserUid = null;
 
-        // View Switcher
         window.switchView = (view) => {
             document.getElementById('login-view').style.display = view === 'login' ? 'block' : 'none';
             document.getElementById('register-view').style.display = view === 'register' ? 'block' : 'none';
             if(view === 'register') generateMath();
         };
 
-        // 🧮 Math Captcha Logic
         let mathAnswers = [];
         function generateMath() {
             mathAnswers = [];
@@ -160,169 +170,135 @@
                 let n1 = Math.floor(Math.random() * 10) + 1;
                 let n2 = Math.floor(Math.random() * 10) + 1;
                 let op = Math.random() > 0.5 ? '+' : '-';
-                // Avoid negative answers
                 if(op === '-' && n1 < n2) [n1, n2] = [n2, n1]; 
-                
                 document.getElementById(`q${i}`).innerText = `${n1} ${op} ${n2} = `;
                 mathAnswers.push(op === '+' ? n1 + n2 : n1 - n2);
-                document.getElementById(`a${i}`).value = ''; // clear old inputs
+                document.getElementById(`a${i}`).value = '';
             }
         }
         window.onload = generateMath;
 
-        // Trick: Firebase needs Email, so we convert Number to a hidden fake email.
         const formatNum = (num) => `${num}@kumarloot.app`; 
 
-        // 🟢 REGISTER (With Math Check)
         window.register = async () => {
+            if(!navigator.onLine) return;
             const num = document.getElementById('reg-num').value;
             const pass = document.getElementById('reg-pass').value;
             const errBox = document.getElementById('reg-err');
 
-            if(num.length < 10 || pass.length < 6) {
-                return errBox.innerText = "Enter valid 10-digit number & 6+ char password!";
-            }
+            if(num.length < 10 || pass.length < 6) return errBox.innerText = "Enter 10-digit number & 6+ char password!";
 
-            // Check Math (Need 2 correct)
             let score = 0;
             for(let i=1; i<=3; i++) {
                 let userAns = parseInt(document.getElementById(`a${i}`).value);
                 if(userAns === mathAnswers[i-1]) score++;
             }
-
-            if(score < 2) {
-                generateMath(); // Reset questions
-                return errBox.innerText = "Math failed! Please answer at least 2 correctly.";
-            }
+            if(score < 2) { generateMath(); return errBox.innerText = "Math failed! Answer at least 2 correctly."; }
 
             try {
                 errBox.innerText = "Creating account...";
                 const userCred = await createUserWithEmailAndPassword(auth, formatNum(num), pass);
-                // Save user in Database with 0 balance
                 await set(ref(db, `users/${userCred.user.uid}`), { phone: num, balance: 0.00 });
-                errBox.innerText = "Account Created!";
             } catch (error) {
-                errBox.innerText = "Number already registered or error occurred!";
+                errBox.innerText = "Number already registered or network error!";
                 generateMath();
             }
         };
 
-        // 🟢 LOGIN
         window.login = async () => {
+            if(!navigator.onLine) return;
             const num = document.getElementById('login-num').value;
             const pass = document.getElementById('login-pass').value;
             const errBox = document.getElementById('login-err');
-
             if(!num || !pass) return errBox.innerText = "Enter Number & Password!";
 
             try {
                 errBox.innerText = "Logging in...";
                 await signInWithEmailAndPassword(auth, formatNum(num), pass);
-            } catch (error) {
-                errBox.innerText = "Invalid Number or Password!";
-            }
+            } catch (error) { errBox.innerText = "Invalid Number or Password!"; }
         };
 
-        // 🛡️ SECURITY & LOAD DATA (1 Device = 1 User Logic)
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUserUid = user.uid;
-                
-                // Get Device ID
-                let deviceId = "unknown";
-                try {
-                    const fp = await import('https://openfpcdn.io/fingerprintjs/v4');
-                    const fpInstance = await fp.default.load();
-                    const result = await fpInstance.get();
-                    deviceId = result.visitorId;
-                } catch(e) { deviceId = "fallback-" + user.uid; }
-
-                // Check Device Lock
-                const dbRef = ref(db);
-                const deviceSnap = await get(child(dbRef, `devices/${deviceId}`));
-
-                if (deviceSnap.exists() && deviceSnap.val() !== user.uid) {
-                    // 🚫 2 IDs on 1 Device -> BLOCKED!
-                    alert("⚠️ SECURITY: Another account is already registered on this device!");
-                    signOut(auth);
-                    return;
-                } else {
-                    // ✅ Allow and Register Device (Supports 2 Devices for 1 ID)
-                    if (!deviceSnap.exists()) { set(ref(db, `devices/${deviceId}`), user.uid); }
-
-                    // Load UI & Balance
-                    document.getElementById('auth-screen').style.display = 'none';
-                    document.getElementById('app-screen').style.display = 'block';
-                    document.getElementById('user-display').innerText = user.email.split('@')[0];
-                    
-                    fetchBalance();
-                }
+                document.getElementById('auth-screen').style.display = 'none';
+                if(navigator.onLine) document.getElementById('app-screen').style.display = 'block';
+                document.getElementById('user-display').innerText = user.email.split('@')[0];
+                fetchBalance();
+                startTimerLoop(); // Start Game Timer Check
             } else {
                 document.getElementById('auth-screen').style.display = 'flex';
                 document.getElementById('app-screen').style.display = 'none';
             }
         });
 
-        // 💰 BALANCE SYSTEM
         async function fetchBalance() {
             const snap = await get(ref(db, `users/${currentUserUid}/balance`));
-            const bal = snap.exists() ? snap.val() : 0.00;
-            document.getElementById('balance').innerText = parseFloat(bal).toFixed(2);
+            document.getElementById('balance').innerText = parseFloat(snap.exists() ? snap.val() : 0.00).toFixed(2);
         }
-
         window.logOut = () => signOut(auth);
 
-        // 🎮 GAME LOGIC (Coin Flip)
-        window.playGame = (userChoice) => {
-            const coin = document.getElementById('coin-display');
-            const resultText = document.getElementById('game-result');
-            const claimBtn = document.getElementById('claim-ad-btn');
-            
-            coin.style.transform = "rotateY(720deg)";
-            resultText.innerText = "Flipping...";
-            resultText.style.color = "#fff";
-            claimBtn.style.display = 'none';
-            document.getElementById('game-controls').style.display = 'none';
+        // 🎮 1 HOUR TIMER LOGIC
+        const COOLDOWN_MS = 60 * 60 * 1000; // 1 Hour
 
-            setTimeout(() => {
-                coin.style.transform = "rotateY(0deg)";
-                const outcomes = ['Heads', 'Tails'];
-                const result = outcomes[Math.floor(Math.random() * 2)];
-                coin.innerText = result.charAt(0); // H or T
+        function startTimerLoop() {
+            setInterval(updateTimerUI, 1000);
+            updateTimerUI();
+        }
 
-                if(userChoice === result) {
-                    resultText.innerText = `🎉 It's ${result}! YOU WIN!`;
-                    resultText.style.color = "#10b981";
-                    claimBtn.style.display = 'block'; // Show Ad Claim Button
-                } else {
-                    resultText.innerText = `😢 It's ${result}. You lost. Try again!`;
-                    resultText.style.color = "#ef4444";
-                    document.getElementById('game-controls').style.display = 'block';
-                }
-            }, 1000);
+        function updateTimerUI() {
+            let lastClaim = parseInt(localStorage.getItem(`last_claim_${currentUserUid}`) || "0");
+            let now = new Date().getTime();
+            let diff = now - lastClaim;
+
+            if (diff < COOLDOWN_MS) {
+                // Game Locked
+                let timeLeft = COOLDOWN_MS - diff;
+                let h = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+                let m = Math.floor((timeLeft / 1000 / 60) % 60);
+                let s = Math.floor((timeLeft / 1000) % 60);
+                
+                document.getElementById('gift-box').innerText = "🔒";
+                document.getElementById('live-timer').style.display = 'block';
+                document.getElementById('live-timer').innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+                document.getElementById('game-status').innerText = "Box is charging...";
+                document.getElementById('game-status').style.color = "#aaa";
+                document.getElementById('claim-ad-btn').style.display = 'none';
+            } else {
+                // Game Ready
+                document.getElementById('gift-box').innerText = "🎁";
+                document.getElementById('live-timer').style.display = 'none';
+                document.getElementById('game-status').innerText = "Ready to Open!";
+                document.getElementById('game-status').style.color = "#10b981";
+            }
+        }
+
+        window.openBox = () => {
+            let lastClaim = parseInt(localStorage.getItem(`last_claim_${currentUserUid}`) || "0");
+            if ((new Date().getTime() - lastClaim) < COOLDOWN_MS) return;
+
+            document.getElementById('gift-box').innerText = "🎉";
+            document.getElementById('game-status').innerText = "You won ₹0.10!";
+            document.getElementById('game-status').style.color = "#38bdf8";
+            document.getElementById('claim-ad-btn').style.display = 'block';
         };
 
-        // 🎁 CLAIM BONUS (Adsterra)
         window.claimBonus = async () => {
-            // 🚨🚨 ADSTERRA DIRECT LINK 🚨🚨
             const adsterraLink = "TUZHI_ADSTERRA_DIRECT_LINK_ITHE_TAK"; 
 
+            // Save claim time and Lock game for 1 Hour
+            localStorage.setItem(`last_claim_${currentUserUid}`, new Date().getTime().toString());
+            
             // Firebase Update Balance
             const snap = await get(ref(db, `users/${currentUserUid}/balance`));
             let currentBal = snap.exists() ? snap.val() : 0.00;
-            currentBal += 0.10;
-            
-            await update(ref(db, `users/${currentUserUid}`), { balance: currentBal });
-            fetchBalance(); // Refresh UI
+            await update(ref(db, `users/${currentUserUid}`), { balance: currentBal + 0.10 });
+            fetchBalance();
 
-            // Reset Game
             document.getElementById('claim-ad-btn').style.display = 'none';
-            document.getElementById('game-controls').style.display = 'block';
-            document.getElementById('game-result').innerText = "";
-            document.getElementById('coin-display').innerText = "?";
+            updateTimerUI(); // Starts lock timer immediately
 
-            alert("🎉 Task Verified! ₹0.10 added to your wallet. Opening Bonus Page...");
-            window.open(adsterraLink, '_blank'); // Open Ad
+            window.open(adsterraLink, '_blank');
         };
     </script>
 </body>
