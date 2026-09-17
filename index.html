@@ -8,19 +8,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* =========================================
-           🌟 GLOBAL STYLES & ANIMATIONS
-           ========================================= */
+        /* 🌟 GLOBAL STYLES */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
         body { background: #0f172a; color: #fff; overflow-x: hidden; user-select: none; }
-        
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pulseGlow { 0% { box-shadow: 0 0 10px #4f46e5; } 50% { box-shadow: 0 0 30px #4f46e5; } 100% { box-shadow: 0 0 10px #4f46e5; } }
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
 
-        /* =========================================
-           🚀 SPLASH SCREEN (LOADING)
-           ========================================= */
+        /* 🚀 SPLASH SCREEN */
         #splash-screen {
             position: fixed; width: 100vw; height: 100vh; background: linear-gradient(135deg, #1e1b4b, #312e81);
             display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999;
@@ -31,83 +26,52 @@
         .loader { width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.2); border-top-color: #fbbf24; border-radius: 50%; animation: spin 1s linear infinite; margin-top: 30px; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* =========================================
-           🔐 AUTHENTICATION SCREEN (LOGIN / REGISTER)
-           ========================================= */
-        #auth-screen { display: none; min-height: 100vh; background: #0f172a; padding: 20px; align-items: center; justify-content: center; flex-direction: column; }
+        /* 🔐 AUTHENTICATION SCREEN */
+        #auth-screen { 
+            display: flex; /* 🚨 Changed to flex so it never stays blank */
+            min-height: 100vh; padding: 20px; align-items: center; justify-content: center; flex-direction: column; 
+        }
         .auth-box {
             background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 25px;
             padding: 30px 20px; width: 100%; max-width: 400px; text-align: center;
-            animation: fadeIn 0.6s ease-out;
             box-shadow: 0 15px 35px rgba(0,0,0,0.5);
         }
         .auth-tabs { display: flex; justify-content: center; margin-bottom: 25px; background: rgba(0,0,0,0.3); border-radius: 30px; padding: 5px; }
         .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; color: #888; font-weight: 600; border-radius: 25px; cursor: pointer; transition: 0.3s; }
         .tab-btn.active { background: #4f46e5; color: #fff; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.4); }
-
         .input-group { position: relative; margin-bottom: 20px; text-align: left; }
         .input-group i { position: absolute; left: 15px; top: 14px; color: #888; font-size: 18px; }
         .custom-input { width: 100%; padding: 12px 15px 12px 45px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 12px; font-size: 14px; outline: none; transition: 0.3s; }
         .custom-input:focus { border-color: #4f46e5; background: rgba(0,0,0,0.4); }
-
         .primary-btn { width: 100%; padding: 12px; background: linear-gradient(45deg, #4f46e5, #6366f1); border: none; border-radius: 12px; color: white; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s; margin-top: 10px; }
-        .primary-btn:hover { transform: scale(0.98); }
-
         .divider { display: flex; align-items: center; margin: 25px 0; color: #888; font-size: 12px; }
         .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.1); margin: 0 10px; }
-
         .google-btn { width: 100%; padding: 12px; background: white; border: none; border-radius: 12px; color: #333; font-weight: bold; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
         .google-btn img { width: 20px; }
-        
-        #error-msg { color: #ff4d4d; font-size: 12px; margin-top: 15px; min-height: 15px; }
+        #error-msg { color: #ff4d4d; font-size: 12px; margin-top: 15px; min-height: 15px; font-weight: bold; }
 
-        /* =========================================
-           📱 MAIN APP DASHBOARD
-           ========================================= */
+        /* 📱 MAIN APP DASHBOARD */
         #app-screen { display: none; padding-bottom: 80px; }
-        
-        /* App Header */
-        .app-header { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .app-header { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.05); }
         .user-info h3 { margin: 0; font-size: 18px; color: #fff; }
         .user-info p { margin: 0; font-size: 12px; color: #a1a1aa; }
-        .profile-pic { width: 45px; height: 45px; background: linear-gradient(45deg, #fbbf24, #f59e0b); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3); }
-
-        /* Premium Balance Card */
-        .balance-card {
-            margin: 20px; padding: 25px; border-radius: 20px;
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            position: relative; overflow: hidden;
-            box-shadow: 0 15px 30px rgba(29, 78, 216, 0.4);
-            animation: fadeIn 0.8s ease-out;
-        }
-        .balance-card::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1) 10%, transparent 20%); background-size: 20px 20px; opacity: 0.3; transform: rotate(30deg); }
+        .profile-pic { width: 45px; height: 45px; background: linear-gradient(45deg, #fbbf24, #f59e0b); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; color: #000; }
+        .balance-card { margin: 20px; padding: 25px; border-radius: 20px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); position: relative; overflow: hidden; box-shadow: 0 15px 30px rgba(29, 78, 216, 0.4); }
         .balance-label { font-size: 14px; opacity: 0.9; }
-        .balance-amount { font-size: 40px; font-weight: 800; margin: 5px 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-        .withdraw-btn { position: absolute; right: 20px; top: 35px; background: rgba(255,255,255,0.2); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.5); padding: 8px 15px; border-radius: 20px; color: #fff; font-weight: bold; cursor: pointer; z-index: 2; transition: 0.3s; }
-        .withdraw-btn:hover { background: #fff; color: #1d4ed8; }
-
-        /* Task Grid */
+        .balance-amount { font-size: 40px; font-weight: 800; margin: 5px 0; }
+        .withdraw-btn { position: absolute; right: 20px; top: 35px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.5); padding: 8px 15px; border-radius: 20px; color: #fff; font-weight: bold; cursor: pointer; z-index: 2; }
         .section-title { padding: 0 20px; font-size: 18px; font-weight: 600; margin-top: 10px; }
         .task-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 15px 20px; }
-        .task-card {
-            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; text-align: center; cursor: pointer;
-            transition: 0.3s; position: relative; overflow: hidden;
-        }
-        .task-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.08); }
+        .task-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; }
         .task-icon { font-size: 35px; margin-bottom: 10px; }
         .task-name { font-size: 15px; font-weight: 600; }
         .task-reward { font-size: 12px; color: #10b981; margin-top: 5px; font-weight: bold; }
-        
-        /* The Money Making Ad Button */
         .premium-ad-btn { grid-column: span 2; background: linear-gradient(45deg, #ef4444, #b91c1c); border: none; animation: pulseGlow 2s infinite; }
-        .premium-ad-btn:hover { transform: scale(0.98); }
-
-        /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid rgba(255,255,255,0.1); z-index: 100; }
-        .nav-item { text-align: center; color: #64748b; font-size: 11px; cursor: pointer; transition: 0.3s; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #0f172a; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid rgba(255,255,255,0.1); z-index: 100; }
+        .nav-item { text-align: center; color: #64748b; font-size: 11px; cursor: pointer; }
         .nav-item i { font-size: 22px; display: block; margin-bottom: 5px; }
-        .nav-item.active { color: #38bdf8; text-shadow: 0 0 10px rgba(56, 189, 248, 0.5); transform: translateY(-3px); }
+        .nav-item.active { color: #38bdf8; }
     </style>
 </head>
 <body>
@@ -125,7 +89,6 @@
             <h2>Welcome Back!</h2>
             <p style="color:#888; font-size:12px; margin-bottom:20px;">1 Device = 1 User Allowed</p>
             
-            <!-- Auth Tabs -->
             <div class="auth-tabs">
                 <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">Login</button>
                 <button class="tab-btn" id="tab-register" onclick="switchTab('register')">Register</button>
@@ -144,15 +107,11 @@
                 <button class="primary-btn" onclick="manualLogin()">Login to Account</button>
             </div>
 
-            <!-- Register Form (Hidden initially) -->
+            <!-- Register Form -->
             <div id="register-form" style="display: none;">
                 <div class="input-group">
                     <i class="fa-solid fa-user"></i>
                     <input type="text" id="reg-name" class="custom-input" placeholder="Full Name">
-                </div>
-                <div class="input-group">
-                    <i class="fa-solid fa-phone"></i>
-                    <input type="number" id="reg-phone" class="custom-input" placeholder="Mobile Number">
                 </div>
                 <div class="input-group">
                     <i class="fa-solid fa-envelope"></i>
@@ -165,12 +124,10 @@
                 <button class="primary-btn" onclick="manualRegister()">Create Account</button>
             </div>
 
-            <!-- Error Messages -->
             <div id="error-msg"></div>
 
             <div class="divider">OR</div>
 
-            <!-- Google Login (With 'Select Account' forced) -->
             <button class="google-btn" id="google-login-btn">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google">
                 Continue with Google
@@ -180,7 +137,6 @@
 
     <!-- 📱 MAIN APP DASHBOARD -->
     <div id="app-screen">
-        
         <div class="app-header">
             <div class="user-info">
                 <h3>Hello, <span id="user-greeting">User</span>!</h3>
@@ -198,7 +154,6 @@
         <div class="section-title">Daily Earning Tasks</div>
         
         <div class="task-grid">
-            <!-- Normal Tasks -->
             <div class="task-card" onclick="alert('Feature unlocking soon!')">
                 <div class="task-icon" style="color: #38bdf8;"><i class="fa-solid fa-gift"></i></div>
                 <div class="task-name">Daily Bonus</div>
@@ -218,23 +173,20 @@
             </div>
         </div>
 
-        <!-- Bottom Navigation -->
         <div class="bottom-nav">
             <div class="nav-item active"><i class="fa-solid fa-house"></i>Home</div>
             <div class="nav-item" onclick="window.location.href='https://t.me/KumarWalletBot'"><i class="fa-solid fa-wallet"></i>Wallet</div>
             <div class="nav-item" onclick="alert('Invite feature coming soon!')"><i class="fa-solid fa-users"></i>Refer</div>
             <div class="nav-item" onclick="logOut()"><i class="fa-solid fa-right-from-bracket"></i>Logout</div>
         </div>
-
     </div>
 
-    <!-- 🛠️ FIREBASE LOGIC (Massive Script Setup) -->
+    <!-- 🛠️ FIREBASE LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getDatabase, ref, get, set, child } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // 🚨 तुझी Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyCewAWzj09CsJWJRqZ16TmWN6Z-d0ATyaM",
             authDomain: "kumar-loot.firebaseapp.com",
@@ -247,19 +199,18 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getDatabase(app);
-        const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4').then(FingerprintJS => FingerprintJS.load());
-
         const errBox = document.getElementById('error-msg');
 
-        // Splash Screen Logic
+        // Safe Splash Screen Hider
         window.addEventListener('load', () => {
             setTimeout(() => {
-                document.getElementById('splash-screen').style.opacity = '0';
-                setTimeout(() => document.getElementById('splash-screen').style.display = 'none', 500);
-            }, 2000); // 2 Seconds splash
+                const splash = document.getElementById('splash-screen');
+                splash.style.opacity = '0';
+                setTimeout(() => splash.style.display = 'none', 500);
+            }, 1500);
         });
 
-        // Toggle Login / Register UI
+        // Tab Switcher
         window.switchTab = function(tab) {
             document.getElementById('tab-login').classList.remove('active');
             document.getElementById('tab-register').classList.remove('active');
@@ -276,43 +227,39 @@
             errBox.innerText = "";
         };
 
-        // 1️⃣ Google Login (Forcing Account Chooser)
+        // Google Login
         document.getElementById('google-login-btn').addEventListener('click', () => {
             errBox.innerText = "Connecting to Google...";
             const provider = new GoogleAuthProvider();
-            // 🚨 हा कोड युझरला त्याचे सगळे Gmail दाखवेल (Account Chooser)
             provider.setCustomParameters({ prompt: 'select_account' });
             signInWithRedirect(auth, provider);
         });
 
         getRedirectResult(auth).catch((error) => { errBox.innerText = "Google Login Failed: " + error.message; });
 
-        // 2️⃣ Custom Manual Register
+        // Manual Register
         window.manualRegister = async function() {
             const name = document.getElementById('reg-name').value;
-            const phone = document.getElementById('reg-phone').value;
             const email = document.getElementById('reg-email').value;
             const pass = document.getElementById('reg-pass').value;
 
-            if(!name || !phone || !email || !pass) { errBox.innerText = "All fields are required!"; return; }
-            if(pass.length < 6) { errBox.innerText = "Password must be at least 6 characters."; return; }
+            if(!name || !email || !pass) { errBox.innerText = "All fields required!"; return; }
+            if(pass.length < 6) { errBox.innerText = "Password must be 6+ chars."; return; }
 
             try {
                 errBox.innerText = "Creating account...";
                 const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-                // Save extra details in Database
-                set(ref(db, `users/${userCredential.user.uid}`), { fullName: name, phone: phone, email: email });
-                errBox.innerText = "Account Created Successfully!";
+                set(ref(db, `users/${userCredential.user.uid}`), { fullName: name, email: email });
+                errBox.innerText = "Success! Loading dashboard...";
             } catch (error) {
-                errBox.innerText = "Error: " + error.message;
+                errBox.innerText = error.message;
             }
         };
 
-        // 3️⃣ Custom Manual Login
+        // Manual Login
         window.manualLogin = async function() {
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-pass').value;
-
             if(!email || !pass) { errBox.innerText = "Enter email and password!"; return; }
 
             try {
@@ -323,14 +270,23 @@
             }
         };
 
-        // 4️⃣ Check User & Anti-Hack Device Lock
+        // Check User State & Safe Anti-Hack
         onAuthStateChanged(auth, async (user) => {
             if (user) {
+                errBox.innerText = "Verifying Device Security...";
+                
+                let deviceId = "unknown";
                 try {
-                    const fp = await fpPromise;
-                    const result = await fp.get();
-                    const deviceId = result.visitorId;
+                    // Safe loading of Fingerprint to prevent AdBlock crashes
+                    const fp = await import('https://openfpcdn.io/fingerprintjs/v4');
+                    const fpInstance = await fp.default.load();
+                    const result = await fpInstance.get();
+                    deviceId = result.visitorId;
+                } catch(e) {
+                    deviceId = "safe-mode-" + user.uid; // Fallback if browser blocks script
+                }
 
+                try {
                     const dbRef = ref(db);
                     const deviceSnapshot = await get(child(dbRef, `devices/${deviceId}`));
 
@@ -341,7 +297,6 @@
                     } else {
                         if (!deviceSnapshot.exists()) { set(ref(db, `devices/${deviceId}`), user.uid); }
 
-                        // Setup Dashboard UI
                         document.getElementById('auth-screen').style.display = 'none';
                         document.getElementById('app-screen').style.display = 'block';
                         
@@ -349,26 +304,26 @@
                         document.getElementById('user-greeting').innerText = displayN;
                         document.getElementById('user-initial').innerText = displayN.charAt(0).toUpperCase();
                     }
-                } catch (err) { errBox.innerText = "Security check failed. Try again."; }
+                } catch (err) {
+                    errBox.innerText = "Database connection error.";
+                }
             } else {
                 document.getElementById('auth-screen').style.display = 'flex';
                 document.getElementById('app-screen').style.display = 'none';
             }
         });
 
-        // Logout
         window.logOut = function() {
             signOut(auth).then(() => { window.location.reload(); });
         }
 
-        // 5️⃣ 💸 WATCH & EARN (Adsterra Direct Link)
         window.watchAdAndEarn = function() {
             // 🚨🚨 इथे तुझी Adsterra ची Direct Link टाक 🚨🚨
             const adsterraLink = "TUZHI_ADSTERRA_DIRECT_LINK_ITHE_TAK"; 
             
             const lastClick = localStorage.getItem("last_ad_click") || 0;
             const now = new Date().getTime();
-            const cooldownTime = 5 * 60 * 1000; // 5 Mins
+            const cooldownTime = 5 * 60 * 1000;
 
             if (now - lastClick < cooldownTime) {
                 let remainingMins = Math.ceil((cooldownTime - (now - lastClick)) / 60000);
