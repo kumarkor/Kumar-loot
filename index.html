@@ -3,145 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kumar Loot - Premium</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>Kumar Loot - Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* 🌟 GLOBAL STYLES */
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
-        body { background: #0f172a; color: #fff; user-select: none; overflow-x: hidden; }
+        /* 🌟 NEW PREMIUM DARK NEON STYLE */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
+        body { background: #09090b; color: #e4e4e7; user-select: none; overflow-x: hidden; }
         
-        /* 🚫 NO INTERNET SCREEN */
-        #no-internet { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0f172a; z-index: 99999; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        #no-internet i { font-size: 60px; color: #ef4444; margin-bottom: 20px; animation: pulse 2s infinite; }
-        
-        /* 🔐 AUTH SCREENS */
-        #auth-screen { display: flex; min-height: 100vh; padding: 20px; align-items: center; justify-content: center; flex-direction: column; }
-        .auth-box { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 30px; width: 100%; max-width: 380px; text-align: center; }
-        .input-group { position: relative; margin-bottom: 15px; }
-        .input-group i { position: absolute; left: 15px; top: 14px; color: #888; }
-        .custom-input { width: 100%; padding: 12px 15px 12px 45px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 12px; outline: none; }
-        .primary-btn { width: 100%; padding: 12px; background: linear-gradient(45deg, #4f46e5, #3b82f6); border: none; border-radius: 12px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .switch-text { font-size: 13px; color: #aaa; margin-top: 15px; cursor: pointer; text-decoration: underline; }
-        
-        /* 🧮 MATH CAPTCHA */
-        .math-box { background: rgba(0,0,0,0.4); padding: 15px; border-radius: 10px; margin-bottom: 15px; text-align: left; }
-        .math-box h4 { font-size: 12px; color: #38bdf8; margin-bottom: 10px; text-align: center; }
-        .math-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 14px; }
-        .math-input { width: 60px; padding: 5px; border-radius: 5px; border: none; text-align: center; background: #fff; color: #000; font-weight: bold; }
+        .glass-panel { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 20px; backdrop-filter: blur(10px); }
+        .btn-neon { background: linear-gradient(90deg, #8b5cf6, #3b82f6); border: none; padding: 12px; border-radius: 12px; color: white; font-weight: bold; width: 100%; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+        .btn-neon:active { transform: scale(0.95); }
+        .input-dark { width: 100%; padding: 12px 15px; background: rgba(0,0,0,0.5); border: 1px solid #27272a; color: #fff; border-radius: 10px; outline: none; margin-bottom: 15px; }
+        .input-dark:focus { border-color: #8b5cf6; }
 
-        /* 📱 APP DASHBOARD */
-        #app-screen { display: none; padding-bottom: 80px; }
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: rgba(0,0,0,0.2); }
-        .balance-card { margin: 15px; padding: 20px; border-radius: 15px; background: linear-gradient(135deg, #10b981, #059669); text-align: center; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3); }
+        /* SCREENS */
+        #auth-screen, #app-screen, #admin-screen { display: none; min-height: 100vh; padding: 20px; padding-bottom: 80px; }
         
-        /* 🎮 NEW GAME SECTION (MYSTERY BOX) */
-        .game-section { margin: 20px; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); text-align: center; }
-        .gift-box { font-size: 80px; margin: 20px auto; cursor: pointer; transition: transform 0.3s; }
-        .gift-box:active { transform: scale(0.9); }
-        .timer-display { font-size: 24px; font-weight: bold; color: #fbbf24; margin: 15px 0; letter-spacing: 2px; }
-        .claim-btn { display: none; width: 100%; padding: 15px; background: #ef4444; color: white; font-weight: bold; border: none; border-radius: 10px; margin-top: 15px; cursor: pointer; }
+        /* AUTH */
+        .auth-container { display: flex; align-items: center; justify-content: center; height: 100vh; flex-direction: column; }
+        .auth-box { width: 100%; max-width: 380px; text-align: center; }
+        .auth-box h1 { font-size: 32px; background: -webkit-linear-gradient(#8b5cf6, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; }
         
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        /* DASHBOARD */
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .balance-card { background: linear-gradient(135deg, #2563eb, #7c3aed); text-align: center; position: relative; overflow: hidden; }
+        .balance-val { font-size: 40px; font-weight: 800; margin: 10px 0; }
+        
+        /* GRID & CARDS */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .action-card { background: #18181b; border: 1px solid #27272a; padding: 15px; border-radius: 15px; text-align: center; cursor: pointer; }
+        .action-card i { font-size: 30px; margin-bottom: 10px; color: #10b981; }
+
+        /* OX GAME */
+        .ox-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 250px; margin: 20px auto; }
+        .ox-cell { height: 75px; background: #27272a; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: bold; cursor: pointer; color: #fff; }
+        
+        /* ADMIN PANEL */
+        .admin-title { color: #ef4444; text-align: center; margin-bottom: 20px; font-size: 24px; text-transform: uppercase; letter-spacing: 2px; }
+        .admin-section { border-left: 4px solid #ef4444; margin-bottom: 20px; padding-left: 15px; }
+
+        .list-item { background: #18181b; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #27272a; }
+        .badge { padding: 4px 8px; border-radius: 5px; font-size: 11px; font-weight: bold; }
+        .bg-yellow { background: #d97706; } .bg-green { background: #059669; } .bg-red { background: #dc2626; }
+
     </style>
 </head>
 <body>
 
-    <!-- 🚫 NO INTERNET SCREEN -->
-    <div id="no-internet">
-        <i class="fa-solid fa-wifi"></i>
-        <h2>No Internet Connection</h2>
-        <p style="color: #aaa; margin-top: 10px; font-size: 14px;">Please check your network and try again.</p>
-    </div>
-
-    <!-- 🔐 LOGIN / REGISTER SCREENS -->
-    <div id="auth-screen">
-        <!-- LOGIN VIEW -->
-        <div class="auth-box" id="login-view">
-            <h2 style="color: #38bdf8; margin-bottom: 20px;">🔥 Kumar Loot</h2>
-            <div class="input-group">
-                <i class="fa-solid fa-phone"></i>
-                <input type="number" id="login-num" class="custom-input" placeholder="Mobile Number">
-            </div>
-            <div class="input-group">
-                <i class="fa-solid fa-lock"></i>
-                <input type="password" id="login-pass" class="custom-input" placeholder="Password">
-            </div>
-            <button class="primary-btn" onclick="login()">Login</button>
-            <div id="login-err" style="color: #ff4d4d; font-size: 12px; margin-top: 10px;"></div>
-            <p class="switch-text" onclick="switchView('register')">New user? Register here</p>
-        </div>
-
-        <!-- REGISTER VIEW -->
-        <div class="auth-box" id="register-view" style="display: none;">
-            <h2 style="color: #10b981; margin-bottom: 10px;">Create Account</h2>
-            <div class="input-group">
-                <i class="fa-solid fa-phone"></i>
-                <input type="number" id="reg-num" class="custom-input" placeholder="Mobile Number">
-            </div>
-            <div class="input-group">
-                <i class="fa-solid fa-lock"></i>
-                <input type="password" id="reg-pass" class="custom-input" placeholder="Create Password">
-            </div>
-            <div class="math-box">
-                <h4>Solve any 2 to prove you are human</h4>
-                <div class="math-row"><span id="q1"></span> <input type="number" id="a1" class="math-input"></div>
-                <div class="math-row"><span id="q2"></span> <input type="number" id="a2" class="math-input"></div>
-                <div class="math-row"><span id="q3"></span> <input type="number" id="a3" class="math-input"></div>
-            </div>
-            <button class="primary-btn" onclick="register()">Create Account</button>
-            <div id="reg-err" style="color: #ff4d4d; font-size: 12px; margin-top: 10px;"></div>
-            <p class="switch-text" onclick="switchView('login')">Already have an account? Login</p>
+    <!-- 🔐 LOGIN SCREEN (Secret Admin Backdoor Included) -->
+    <div id="auth-screen" class="auth-container" style="display: flex;">
+        <div class="auth-box glass-panel">
+            <h1>KUMAR LOOT</h1>
+            <p style="color:#a1a1aa; font-size:14px; margin-bottom:20px;">Premium Access</p>
+            
+            <input type="number" id="login-num" class="input-dark" placeholder="Mobile Number">
+            <input type="password" id="login-pass" class="input-dark" placeholder="Password">
+            
+            <button class="btn-neon" onclick="login()">Access Account</button>
+            <p id="login-err" style="color: #ef4444; font-size: 13px; margin-top: 10px;"></p>
+            
+            <p style="margin-top: 15px; font-size: 13px; color: #a1a1aa;">New User? <span style="color: #3b82f6; cursor: pointer;" onclick="createDummyAccount()">Register Here</span></p>
         </div>
     </div>
 
-    <!-- 📱 APP DASHBOARD -->
+    <!-- 📱 USER APP DASHBOARD -->
     <div id="app-screen">
-        <div class="header">
-            <h3>Hello, <span id="user-display" style="color: #38bdf8;">User</span>!</h3>
-            <div onclick="logOut()" style="background: rgba(255,255,255,0.1); padding: 8px 12px; border-radius: 10px; font-size: 12px; cursor: pointer;">Logout</div>
+        <div class="header-top">
+            <div><p style="font-size: 12px; color: #a1a1aa;">Welcome back,</p><h3 id="user-display">User</h3></div>
+            <div onclick="logOut()" class="glass-panel" style="padding: 8px 15px; border-radius: 10px; font-size: 12px; cursor: pointer; color: #ef4444;"><i class="fa-solid fa-power-off"></i></div>
         </div>
 
-        <div class="balance-card">
-            <div style="font-size: 14px;">Total Wallet Balance</div>
-            <div style="font-size: 35px; font-weight: 800;">₹<span id="balance">0.00</span></div>
+        <div class="glass-panel balance-card">
+            <p style="font-size: 14px; opacity: 0.8;">Wallet Balance</p>
+            <div class="balance-val">₹<span id="balance">0.00</span></div>
+            <button class="btn-neon" style="background: #fff; color: #000; width: auto; padding: 8px 20px; font-size: 12px;" onclick="showWithdraw()">Withdraw Funds</button>
         </div>
 
-        <!-- 🎮 1 HOUR MYSTERY BOX GAME -->
-        <div class="game-section">
-            <h3 style="color: #fbbf24;">Hourly Mystery Box</h3>
-            <p style="font-size: 12px; color: #aaa;">Open the box every 1 hour to get fixed ₹0.10!</p>
-            
-            <div class="gift-box" id="gift-box" onclick="openBox()">🎁</div>
-            
-            <div class="timer-display" id="live-timer" style="display: none;">00:00:00</div>
-            <p id="game-status" style="margin-top: 10px; font-weight: bold;"></p>
-            
-            <button id="claim-ad-btn" class="claim-btn" onclick="claimBonus()">📺 Watch Ad to Claim ₹0.10</button>
+        <div class="grid-2">
+            <div class="action-card" onclick="openGame()">
+                <i class="fa-solid fa-gamepad" style="color: #f59e0b;"></i>
+                <h4>Play OX</h4>
+                <p style="font-size: 11px; color: #a1a1aa;">Win ₹<span id="ox-reward-display">0.10</span></p>
+            </div>
+            <div class="action-card" onclick="watchAd()">
+                <i class="fa-solid fa-play" style="color: #ef4444;"></i>
+                <h4>Watch Ad</h4>
+                <p style="font-size: 11px; color: #a1a1aa;">Earn ₹0.05</p>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 25px; margin-bottom: 10px; font-size: 16px;">Available Tasks</h3>
+        <div id="user-tasks"></div>
+
+        <h3 style="margin-top: 25px; margin-bottom: 10px; font-size: 16px;">Redeem Gift Code</h3>
+        <div style="display: flex; gap: 10px;">
+            <input type="text" id="gift-code-input" class="input-dark" style="margin: 0;" placeholder="Enter Code">
+            <button class="btn-neon" style="width: 100px;" onclick="redeemGift()">Redeem</button>
+        </div>
+
+        <!-- Withdraw Section (Hidden) -->
+        <div id="withdraw-section" class="glass-panel" style="display: none; margin-top: 20px; border-color: #3b82f6;">
+            <h3>Withdraw Request</h3>
+            <p style="font-size: 12px; color: #a1a1aa; margin-bottom: 15px;">Min: ₹<span id="min-wd-display">10</span> | Tax: <span id="tax-wd-display">0</span>%</p>
+            <input type="number" id="wd-amount" class="input-dark" placeholder="Enter Amount">
+            <input type="text" id="wd-upi" class="input-dark" placeholder="UPI ID / Number">
+            <button class="btn-neon" onclick="requestWithdraw()">Submit Request</button>
+            <div id="wd-history" style="margin-top: 15px;"></div>
+        </div>
+
+        <!-- OX Game Section (Hidden) -->
+        <div id="ox-section" class="glass-panel" style="display: none; margin-top: 20px; text-align: center;">
+            <h3>OX Tic-Tac-Toe</h3>
+            <p id="ox-status" style="color: #f59e0b; margin-top: 10px;">Your Turn (X)</p>
+            <div class="ox-board" id="board">
+                <div class="ox-cell" onclick="makeMove(0)"></div><div class="ox-cell" onclick="makeMove(1)"></div><div class="ox-cell" onclick="makeMove(2)"></div>
+                <div class="ox-cell" onclick="makeMove(3)"></div><div class="ox-cell" onclick="makeMove(4)"></div><div class="ox-cell" onclick="makeMove(5)"></div>
+                <div class="ox-cell" onclick="makeMove(6)"></div><div class="ox-cell" onclick="makeMove(7)"></div><div class="ox-cell" onclick="makeMove(8)"></div>
+            </div>
+            <button class="btn-neon" style="background: #27272a; margin-top: 15px;" onclick="resetOX()">Restart Game</button>
         </div>
     </div>
 
-    <!-- 🛠️ LOGIC SCRIPT -->
+    <!-- 👑 SECRET ADMIN PANEL -->
+    <div id="admin-screen">
+        <h1 class="admin-title"><i class="fa-solid fa-user-secret"></i> Admin Hub</h1>
+        <button class="btn-neon" style="background: #ef4444; margin-bottom: 20px;" onclick="logOut()">Exit Admin</button>
+
+        <!-- Settings -->
+        <div class="glass-panel admin-section">
+            <h3>Control Settings</h3>
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <input type="number" id="adm-min-wd" class="input-dark" placeholder="Min Withdraw">
+                <input type="number" id="adm-tax" class="input-dark" placeholder="Tax %">
+            </div>
+            <input type="number" id="adm-ox-reward" class="input-dark" placeholder="OX Win Reward (₹)">
+            <button class="btn-neon" onclick="saveAdminSettings()">Save Settings</button>
+        </div>
+
+        <!-- Create Task -->
+        <div class="glass-panel admin-section">
+            <h3>Create Task</h3>
+            <input type="text" id="adm-task-name" class="input-dark" placeholder="Task Name">
+            <input type="text" id="adm-task-desc" class="input-dark" placeholder="Description">
+            <input type="text" id="adm-task-link" class="input-dark" placeholder="Link">
+            <input type="number" id="adm-task-reward" class="input-dark" placeholder="Reward (₹)">
+            <button class="btn-neon" onclick="createTask()">Publish Task</button>
+        </div>
+
+        <!-- Withdraw Requests -->
+        <div class="glass-panel admin-section">
+            <h3>Pending Withdrawals</h3>
+            <div id="adm-withdraw-list"></div>
+        </div>
+
+        <!-- Task Approvals -->
+        <div class="glass-panel admin-section">
+            <h3>Task Approvals (Screenshots)</h3>
+            <div id="adm-task-list"></div>
+        </div>
+
+        <!-- Ban User -->
+        <div class="glass-panel admin-section" style="border-left-color: #ef4444;">
+            <h3>Ban / Unban User</h3>
+            <input type="number" id="adm-ban-num" class="input-dark" placeholder="Enter Mobile Number">
+            <button class="btn-neon" style="background: #dc2626;" onclick="banUser()">Ban User</button>
+        </div>
+
+        <!-- Gift Codes -->
+        <div class="glass-panel admin-section">
+            <h3>Create Gift Code</h3>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="adm-gift-code" class="input-dark" placeholder="CODE">
+                <input type="number" id="adm-gift-amt" class="input-dark" placeholder="Amount (₹)">
+            </div>
+            <button class="btn-neon" onclick="createGiftCode()">Generate Code</button>
+        </div>
+    </div>
+
+    <!-- 🛠️ FIREBASE LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getDatabase, ref, get, set, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-        // 🚨 NETWORK CHECKER (Offline/Online)
-        function checkNetwork() {
-            if (!navigator.onLine) {
-                document.getElementById('no-internet').style.display = 'flex';
-                document.getElementById('auth-screen').style.display = 'none';
-                document.getElementById('app-screen').style.display = 'none';
-            } else {
-                document.getElementById('no-internet').style.display = 'none';
-                // Will revert to normal flow automatically
-            }
-        }
-        window.addEventListener('online', () => { window.location.reload(); });
-        window.addEventListener('offline', checkNetwork);
-        checkNetwork(); // Initial check
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, get, set, update, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCewAWzj09CsJWJRqZ16TmWN6Z-d0ATyaM",
@@ -155,151 +200,242 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getDatabase(app);
-        let currentUserUid = null;
+        let currentUser = null;
+        let adminSettings = { minWd: 10, tax: 0, oxReward: 0.10 };
 
-        window.switchView = (view) => {
-            document.getElementById('login-view').style.display = view === 'login' ? 'block' : 'none';
-            document.getElementById('register-view').style.display = view === 'register' ? 'block' : 'none';
-            if(view === 'register') generateMath();
-        };
-
-        let mathAnswers = [];
-        function generateMath() {
-            mathAnswers = [];
-            for(let i=1; i<=3; i++) {
-                let n1 = Math.floor(Math.random() * 10) + 1;
-                let n2 = Math.floor(Math.random() * 10) + 1;
-                let op = Math.random() > 0.5 ? '+' : '-';
-                if(op === '-' && n1 < n2) [n1, n2] = [n2, n1]; 
-                document.getElementById(`q${i}`).innerText = `${n1} ${op} ${n2} = `;
-                mathAnswers.push(op === '+' ? n1 + n2 : n1 - n2);
-                document.getElementById(`a${i}`).value = '';
-            }
-        }
-        window.onload = generateMath;
-
-        const formatNum = (num) => `${num}@kumarloot.app`; 
-
-        window.register = async () => {
-            if(!navigator.onLine) return;
-            const num = document.getElementById('reg-num').value;
-            const pass = document.getElementById('reg-pass').value;
-            const errBox = document.getElementById('reg-err');
-
-            if(num.length < 10 || pass.length < 6) return errBox.innerText = "Enter 10-digit number & 6+ char password!";
-
-            let score = 0;
-            for(let i=1; i<=3; i++) {
-                let userAns = parseInt(document.getElementById(`a${i}`).value);
-                if(userAns === mathAnswers[i-1]) score++;
-            }
-            if(score < 2) { generateMath(); return errBox.innerText = "Math failed! Answer at least 2 correctly."; }
-
-            try {
-                errBox.innerText = "Creating account...";
-                const userCred = await createUserWithEmailAndPassword(auth, formatNum(num), pass);
-                await set(ref(db, `users/${userCred.user.uid}`), { phone: num, balance: 0.00 });
-            } catch (error) {
-                errBox.innerText = "Number already registered or network error!";
-                generateMath();
-            }
-        };
-
+        // 🔐 LOGIN LOGIC (WITH SECRET ADMIN)
         window.login = async () => {
-            if(!navigator.onLine) return;
             const num = document.getElementById('login-num').value;
             const pass = document.getElementById('login-pass').value;
-            const errBox = document.getElementById('login-err');
-            if(!num || !pass) return errBox.innerText = "Enter Number & Password!";
+            
+            // 🚨 SECRET ADMIN BACKDOOR
+            if(num === '100' && pass === '2010') {
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('admin-screen').style.display = 'block';
+                loadAdminData();
+                return;
+            }
 
+            if(!num || !pass) return alert("Enter details!");
+            document.getElementById('login-err').innerText = "Authenticating...";
+            
             try {
-                errBox.innerText = "Logging in...";
-                await signInWithEmailAndPassword(auth, formatNum(num), pass);
-            } catch (error) { errBox.innerText = "Invalid Number or Password!"; }
+                await signInWithEmailAndPassword(auth, `${num}@kumarloot.app`, pass);
+            } catch (e) { document.getElementById('login-err').innerText = "Incorrect credentials!"; }
         };
 
+        // Dummy Register for testing
+        window.createDummyAccount = async () => {
+            let num = prompt("Enter 10 digit number to register:");
+            let pass = prompt("Create a password (min 6 chars):");
+            if(num && pass) {
+                try {
+                    let cred = await createUserWithEmailAndPassword(auth, `${num}@kumarloot.app`, pass);
+                    await set(ref(db, `users/${cred.user.uid}`), { phone: num, balance: 0.00, banned: false });
+                    alert("Registered! You can now login.");
+                } catch(e) { alert(e.message); }
+            }
+        };
+
+        // 🛡️ DEVICE LOCK & BAN CHECK
         onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                currentUserUid = user.uid;
+            if (user && user.email !== "100@kumarloot.app") {
+                currentUser = user;
+                
+                // Ban Check
+                const userSnap = await get(ref(db, `users/${user.uid}`));
+                if(userSnap.exists() && userSnap.val().banned) {
+                    alert("🚫 Your account has been BANNED by Admin!");
+                    signOut(auth); return;
+                }
+
+                // 1 Device = 1 User Check (Fingerprint)
+                let deviceId = "test-device"; // In production, use FingerprintJS
+                try {
+                    const fp = await import('https://openfpcdn.io/fingerprintjs/v4');
+                    const fpInstance = await fp.default.load();
+                    deviceId = (await fpInstance.get()).visitorId;
+                } catch(e) {}
+
+                const deviceSnap = await get(ref(db, `devices/${deviceId}`));
+                if (deviceSnap.exists() && deviceSnap.val() !== user.uid) {
+                    alert("⚠️ SECURITY: Another ID is registered on this device!");
+                    signOut(auth); return;
+                } else if (!deviceSnap.exists()) {
+                    set(ref(db, `devices/${deviceId}`), user.uid);
+                }
+
                 document.getElementById('auth-screen').style.display = 'none';
-                if(navigator.onLine) document.getElementById('app-screen').style.display = 'block';
-                document.getElementById('user-display').innerText = user.email.split('@')[0];
-                fetchBalance();
-                startTimerLoop(); // Start Game Timer Check
-            } else {
-                document.getElementById('auth-screen').style.display = 'flex';
-                document.getElementById('app-screen').style.display = 'none';
+                document.getElementById('app-screen').style.display = 'block';
+                document.getElementById('user-display').innerText = userSnap.val().phone;
+                
+                loadAppSettings();
+                loadUserBalance();
+                loadUserTasks();
             }
         });
 
-        async function fetchBalance() {
-            const snap = await get(ref(db, `users/${currentUserUid}/balance`));
-            document.getElementById('balance').innerText = parseFloat(snap.exists() ? snap.val() : 0.00).toFixed(2);
-        }
-        window.logOut = () => signOut(auth);
+        window.logOut = () => { signOut(auth); window.location.reload(); };
 
-        // 🎮 1 HOUR TIMER LOGIC
-        const COOLDOWN_MS = 60 * 60 * 1000; // 1 Hour
-
-        function startTimerLoop() {
-            setInterval(updateTimerUI, 1000);
-            updateTimerUI();
+        // ⚙️ LOAD SETTINGS
+        async function loadAppSettings() {
+            const snap = await get(ref(db, 'settings'));
+            if(snap.exists()) adminSettings = snap.val();
+            document.getElementById('min-wd-display').innerText = adminSettings.minWd;
+            document.getElementById('tax-wd-display').innerText = adminSettings.tax;
+            document.getElementById('ox-reward-display').innerText = adminSettings.oxReward;
         }
 
-        function updateTimerUI() {
-            let lastClaim = parseInt(localStorage.getItem(`last_claim_${currentUserUid}`) || "0");
-            let now = new Date().getTime();
-            let diff = now - lastClaim;
+        async function loadUserBalance() {
+            const snap = await get(ref(db, `users/${currentUser.uid}/balance`));
+            document.getElementById('balance').innerText = parseFloat(snap.val() || 0).toFixed(2);
+        }
 
-            if (diff < COOLDOWN_MS) {
-                // Game Locked
-                let timeLeft = COOLDOWN_MS - diff;
-                let h = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
-                let m = Math.floor((timeLeft / 1000 / 60) % 60);
-                let s = Math.floor((timeLeft / 1000) % 60);
-                
-                document.getElementById('gift-box').innerText = "🔒";
-                document.getElementById('live-timer').style.display = 'block';
-                document.getElementById('live-timer').innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-                document.getElementById('game-status').innerText = "Box is charging...";
-                document.getElementById('game-status').style.color = "#aaa";
-                document.getElementById('claim-ad-btn').style.display = 'none';
-            } else {
-                // Game Ready
-                document.getElementById('gift-box').innerText = "🎁";
-                document.getElementById('live-timer').style.display = 'none';
-                document.getElementById('game-status').innerText = "Ready to Open!";
-                document.getElementById('game-status').style.color = "#10b981";
+        // 📺 WATCH AD
+        window.watchAd = async () => {
+            const adLink = "TUZHI_ADSTERRA_LINK"; 
+            const snap = await get(ref(db, `users/${currentUser.uid}/balance`));
+            await update(ref(db, `users/${currentUser.uid}`), { balance: (snap.val()||0) + 0.05 });
+            loadUserBalance();
+            window.open(adLink, '_blank');
+        };
+
+        // 🎮 OX GAME (TIC TAC TOE)
+        let board = ["", "", "", "", "", "", "", "", ""];
+        let gameActive = true;
+        window.openGame = () => { document.getElementById('ox-section').style.display = 'block'; };
+        
+        window.makeMove = async (index) => {
+            if(!gameActive || board[index] !== "") return;
+            board[index] = "X";
+            updateBoardUI();
+            if(checkWin("X")) return endOX("You Win! +₹" + adminSettings.oxReward, true);
+            
+            // Bot Move
+            let empty = board.map((v, i) => v === "" ? i : null).filter(v => v !== null);
+            if(empty.length === 0) return endOX("Draw!", false);
+            
+            board[empty[Math.floor(Math.random() * empty.length)]] = "O";
+            setTimeout(() => {
+                updateBoardUI();
+                if(checkWin("O")) endOX("You Lost!", false);
+            }, 500);
+        };
+
+        function updateBoardUI() {
+            const cells = document.querySelectorAll('.ox-cell');
+            board.forEach((val, i) => cells[i].innerText = val);
+        }
+
+        function checkWin(player) {
+            const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+            return wins.some(comb => comb.every(i => board[i] === player));
+        }
+
+        async function endOX(msg, isWin) {
+            gameActive = false;
+            document.getElementById('ox-status').innerText = msg;
+            if(isWin) {
+                const snap = await get(ref(db, `users/${currentUser.uid}/balance`));
+                await update(ref(db, `users/${currentUser.uid}`), { balance: (snap.val()||0) + parseFloat(adminSettings.oxReward) });
+                loadUserBalance();
             }
         }
 
-        window.openBox = () => {
-            let lastClaim = parseInt(localStorage.getItem(`last_claim_${currentUserUid}`) || "0");
-            if ((new Date().getTime() - lastClaim) < COOLDOWN_MS) return;
-
-            document.getElementById('gift-box').innerText = "🎉";
-            document.getElementById('game-status').innerText = "You won ₹0.10!";
-            document.getElementById('game-status').style.color = "#38bdf8";
-            document.getElementById('claim-ad-btn').style.display = 'block';
+        window.resetOX = () => {
+            board = ["", "", "", "", "", "", "", "", ""];
+            gameActive = true;
+            document.getElementById('ox-status').innerText = "Your Turn (X)";
+            updateBoardUI();
         };
 
-        window.claimBonus = async () => {
-            const adsterraLink = "TUZHI_ADSTERRA_DIRECT_LINK_ITHE_TAK"; 
+        // 💸 WITHDRAWAL
+        window.showWithdraw = () => { document.getElementById('withdraw-section').style.display = 'block'; loadWdHistory(); };
+        window.requestWithdraw = async () => {
+            let amt = parseFloat(document.getElementById('wd-amount').value);
+            let upi = document.getElementById('wd-upi').value;
+            if(!amt || !upi) return alert("Fill all details");
+            if(amt < adminSettings.minWd) return alert(`Minimum withdraw is ₹${adminSettings.minWd}`);
 
-            // Save claim time and Lock game for 1 Hour
-            localStorage.setItem(`last_claim_${currentUserUid}`, new Date().getTime().toString());
+            const snap = await get(ref(db, `users/${currentUser.uid}/balance`));
+            let bal = snap.val() || 0;
+            if(bal < amt) return alert("Insufficient balance!");
+
+            let taxAmt = amt * (adminSettings.tax / 100);
+            let finalAmt = amt - taxAmt;
+
+            // Deduct Balance
+            await update(ref(db, `users/${currentUser.uid}`), { balance: bal - amt });
             
-            // Firebase Update Balance
-            const snap = await get(ref(db, `users/${currentUserUid}/balance`));
-            let currentBal = snap.exists() ? snap.val() : 0.00;
-            await update(ref(db, `users/${currentUserUid}`), { balance: currentBal + 0.10 });
-            fetchBalance();
-
-            document.getElementById('claim-ad-btn').style.display = 'none';
-            updateTimerUI(); // Starts lock timer immediately
-
-            window.open(adsterraLink, '_blank');
+            // Save Request
+            let wdRef = push(ref(db, 'withdrawals'));
+            await set(wdRef, { uid: currentUser.uid, amount: finalAmt, upi: upi, status: "Pending", date: new Date().toLocaleString() });
+            
+            alert(`Request Sent! Tax Deducted: ₹${taxAmt}. Final Amount: ₹${finalAmt}`);
+            loadUserBalance(); loadWdHistory();
         };
+
+        async function loadWdHistory() {
+            onValue(ref(db, 'withdrawals'), (snap) => {
+                let html = "";
+                snap.forEach(child => {
+                    let wd = child.val();
+                    if(wd.uid === currentUser.uid) {
+                        let color = wd.status === "Pending" ? "bg-yellow" : (wd.status === "Approved" ? "bg-green" : "bg-red");
+                        html += `<div class="list-item">
+                            <div><p style="font-size:12px;">ID: ${child.key.slice(0,5)}...</p><p>₹${wd.amount} - ${wd.upi}</p></div>
+                            <span class="badge ${color}">${wd.status}</span>
+                        </div>`;
+                    }
+                });
+                document.getElementById('wd-history').innerHTML = html || "<p style='font-size:12px;'>No history</p>";
+            });
+        }
+
+        // ==========================================
+        // 👑 ADMIN PANEL FUNCTIONS (SECRET)
+        // ==========================================
+        window.loadAdminData = () => {
+            get(ref(db, 'settings')).then(snap => {
+                if(snap.exists()){
+                    document.getElementById('adm-min-wd').value = snap.val().minWd;
+                    document.getElementById('adm-tax').value = snap.val().tax;
+                    document.getElementById('adm-ox-reward').value = snap.val().oxReward;
+                }
+            });
+            loadAdminWithdrawals();
+        };
+
+        window.saveAdminSettings = () => {
+            set(ref(db, 'settings'), {
+                minWd: parseFloat(document.getElementById('adm-min-wd').value || 10),
+                tax: parseFloat(document.getElementById('adm-tax').value || 0),
+                oxReward: parseFloat(document.getElementById('adm-ox-reward').value || 0.1)
+            });
+            alert("Settings Saved!");
+        };
+
+        function loadAdminWithdrawals() {
+            onValue(ref(db, 'withdrawals'), (snap) => {
+                let html = "";
+                snap.forEach(child => {
+                    let wd = child.val();
+                    if(wd.status === "Pending") {
+                        html += `<div class="list-item">
+                            <div><p style="font-size:12px;">UID: ${wd.uid.slice(0,5)}</p><p>₹${wd.amount} to ${wd.upi}</p></div>
+                            <div>
+                                <button class="btn-neon" style="background:#059669; padding:5px 10px;" onclick="updateWd('${child.key}', 'Approved')">✔</button>
+                                <button class="btn-neon" style="background:#dc2626; padding:5px 10px;" onclick="updateWd('${child.key}', 'Rejected')">✖</button>
+                            </div>
+                        </div>`;
+                    }
+                });
+                document.getElementById('adm-withdraw-list').innerHTML = html || "<p>No pending requests.</p>";
+            });
+        }
+
+        window.updateWd = (id, status) => { update(ref(db, `withdrawals/${id}`), { status: status }); };
+
     </script>
 </body>
 </html>
